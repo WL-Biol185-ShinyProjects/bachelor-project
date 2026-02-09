@@ -1,3 +1,1 @@
 # bachelor-project
-
-:) 
