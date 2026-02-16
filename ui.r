@@ -2,7 +2,22 @@ library(shiny)
 
 ui <- fluidPage(
   tags$head(
+    tags$link(rel = "stylesheet",
+              href = "https://fonts.googleapis.com/css2?family=Lobster&family=Sloop+Script+One&display=swap"
+    ),
+    
     tags$style(HTML("
+       /* Remove ALL default margins and padding */
+      body, html {
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden;
+        height: 100%;
+      }
+       .container-fluid {
+        padding: 0 !important;
+      }
+      
       .center-button {
         position: absolute;
         top: 50%;
@@ -10,26 +25,44 @@ ui <- fluidPage(
         transform: translate(-50%, -50%);
         z-index: 1000;
       }
+      
       .full-screen {
         height: 100vh;
-        margin: -15px;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
       }
     "))
   ),
   
-  titlePanel("Bachelor/Bachelorette Analysis"),
   
   tabsetPanel(
     id = "tabs",
     tabPanel("Will you accept this rose?",
              tags$div(
                class = "full-screen",
-               style = "background-color: #000000; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;",
+               style = "background-image: url('bachelor_rose.png'); 
+            background-size: cover; 
+            background-position: center; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            cursor: pointer;",
                onclick = "Shiny.setInputValue('splash_click', Math.random());",
                
-               tags$img(src = "bachelor_ring.png", width = "300px", style = "margin-bottom: 30px;"),
+               # Centered text on top with Lobster font
                tags$h1("Will you accept this rose?", 
-                       style = "color: #FFB6C1; font-family: 'Georgia', serif; font-size: 48px;")
+                       style = "font-family: 'Lobster', cursive; 
+                    font-size: 80px; 
+                    color: #FFFFFF; 
+                    z-index: 100; 
+                    text-align: center;
+                    text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+                    margin: 0;
+                    padding: 20px;")
              )
     ),
     
@@ -38,6 +71,8 @@ ui <- fluidPage(
              tags$div(
                class = "full-screen",
                style = "display: flex; position: relative;",
+               onclick = "Shiny.setInputValue('splash_click', Math.random());",
+    
                
                # LEFT SIDE - RED (Bachelor)
                tags$div(
