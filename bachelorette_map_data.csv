@@ -1,0 +1,297 @@
+"city_state","count","avg_week","max_week","latitude","longitude"
+"Albuquerque, New Mexico",1,1,1,35.0841034,-106.650985
+"Alpine, Utah",1,3,3,40.453253,-111.7779596
+"Anchorage, Alaska",1,1,1,61.2163129,-149.894852
+"Andover, Kansas",1,2,2,37.7139041,-97.1364294
+"Ann Arbor, Michigan",1,1,1,42.2813722,-83.7484616
+"Arlington, Iowa",1,9,9,42.748965,-91.6714453
+"Arlington, Texas",1,8,8,32.7355816,-97.1071186
+"Arlington, Virginia",1,1,1,38.8769326,-77.0893094
+"Ashburn, Virginia",1,2,2,39.0437192,-77.4874899
+"Aspen, Colorado",2,4.5,8,39.1911128,-106.82356
+"Atlanta, Georgia",3,5,9,33.7544657,-84.3898151
+"Aubrey, Texas",1,1,1,33.3142085,-96.9756323
+"Augusta, Georgia",1,1,1,33.4709714,-81.9748429
+"Austin, Texas",4,2.25,4,30.2711286,-97.7436995
+"Bailey, Colorado",1,10,10,39.4064662,-105.4717013
+"Balch Springs, Texas",1,4,4,32.7287413,-96.6227714
+"Baltimore, Maryland",2,5,9,39.2908816,-76.610759
+"Barquisimeto, Venezuela",1,6,6,10.0774374,-69.3222293
+"Barrington, Illinois",1,2,2,42.1539141,-88.1361888
+"Barrington, Rhode Island",1,1,1,41.7407661,-71.3084633
+"Bartlett, Illinois",1,9,9,41.9908485,-88.1850028
+"Batavia, Illinois",1,3,3,41.8500284,-88.3125738
+"Beaverton, Oregon",1,3,3,45.4871723,-122.80378
+"Bethesda, Maryland",1,3,3,38.9812726,-77.1233587
+"Birmingham, Alabama",1,2,2,33.5206824,-86.8024326
+"Birmingham, Michigan",1,7,7,42.5467012,-83.2113192
+"Blackfoot, Idaho",1,9,9,43.190039,-112.348357
+"Blaine, Minnesota",1,3,3,45.1607987,-93.2349489
+"Boca Raton, Florida",2,2.5,3,26.3586885,-80.0830984
+"Boise, Idaho",1,1,1,43.6166163,-116.200886
+"Bonnyville, Alberta",1,3,3,54.267925,-110.741515
+"Booneville, Mississippi",1,7,7,34.6555212,-88.5634361
+"Boston, Massachusetts",6,3.16666666666667,6,42.3588336,-71.0578303
+"Bradford, England",1,2,2,53.7944229,-1.7519186
+"Breckenridge, Colorado",1,11,11,39.4829124,-106.0465486
+"Bridgewater, Massachusetts",1,2,2,41.9902206,-70.9754432
+"Brownfield, Texas",1,6,6,33.1811661,-102.274237
+"Buckhead, Georgia",1,2,2,33.8398137,-84.3795589
+"Buenos Aires, Argentina",1,4,4,-34.6095579,-58.3887904
+"Buffalo, New York",2,5,9,42.8864163,-78.8781493
+"Burnet, Texas",1,8,8,30.7763939,-98.1700016
+"Calgary, Alberta",1,1,1,51.0456064,-114.057541
+"Camp Hill, Pennsylvania",1,7,7,40.2398118,-76.9199742
+"Campbell River, British Columbia",1,2,2,50.023071,-125.244153
+"Campton, Kentucky",1,1,1,37.7342526,-83.547409
+"Cardiff, California",1,1,1,33.6883573,-117.8063848
+"Carlsbad, California",1,1,1,33.1580933,-117.3505966
+"Carmel Valley, California",1,7,7,36.4796839,-121.732447
+"Carroll, Iowa",1,2,2,42.0193628,-94.860335
+"Carthage, Illinois",1,3,3,40.416433,-91.1362537
+"Casa Grande, Arizona",1,4,4,32.8772834,-111.7536818
+"Castle Rock, Colorado",1,9,9,39.3722552,-104.858682
+"Century City, California",1,2,2,34.057359,-118.4146125
+"Chadds Ford, Pennsylvania",1,8,8,39.872027,-75.5914213
+"Charlottesville, Virginia",1,1,1,38.029306,-78.4766781
+"Chelsea, Vermont",1,2,2,43.9891914,-72.447778
+"Cherry Hill, New Jersey",1,5,5,39.9348351,-75.0307264
+"Chesterland, Ohio",1,3,3,41.5208961,-81.3375216
+"Chicago, Illinois",15,2.73333333333333,8,41.8755616,-87.6244212
+"Chico, California",1,11,11,39.7284945,-121.8374777
+"Chisago City, Minnesota",1,1,1,45.3735757,-92.8899376
+"Cincinnati, Ohio",2,3,3,39.1014537,-84.5124602
+"Citrus Heights, California",1,4,4,38.7071247,-121.2810611
+"Cleveland, Ohio",3,4.33333333333333,10,41.4996574,-81.6936772
+"Clinton, New Jersey",1,5,5,40.6362878,-74.9116603
+"Creve Coeur, Missouri",1,7,7,38.6613007,-90.4423653
+"Crystal River, Florida",1,5,5,28.902479,-82.5926012
+"Dacono, Colorado",1,6,6,40.0856806,-104.9371711
+"Dallas, Texas",9,3.44444444444444,7,32.7762719,-96.7968559
+"Danville, California",1,1,1,37.8225892,-122.0008254
+"Defiance, Iowa",1,2,2,41.8240937,-95.3413533
+"Dennis, Massachusetts",1,10,10,41.7353872,-70.1939087
+"Denton, Texas",1,6,6,33.1838787,-97.1413417
+"Denver, Colorado",3,5,7,39.7392364,-104.984862
+"Derby, Kansas",1,3,3,37.5455735,-97.2689331
+"Detroit Lakes, Minnesota",1,1,1,46.817181,-95.845325
+"Detroit, Michigan",1,1,1,42.3315509,-83.0466403
+"Dublin, California",1,3,3,37.7021521,-121.9357918
+"Duluth, Georgia",1,1,1,34.0028569,-84.1441046
+"Eden Prairie, Minnesota",1,3,3,44.8546856,-93.470786
+"El Segundo, California",1,1,1,33.917028,-118.4156337
+"Elgin, Illinois",1,5,5,42.03726,-88.2810994
+"Ellington, Connecticut",1,1,1,41.9039863,-72.4698071
+"Elmhurst, Illinois",1,1,1,41.8994745,-87.9403418
+"Elmore, Ohio",1,1,1,41.4761621,-83.2957584
+"Encinitas, California",2,5.5,10,33.0369867,-117.2919818
+"Evans, Georgia",1,6,6,32.1613648,-81.8980725
+"Evergreen, Colorado",1,1,1,39.632845,-105.323299
+"Fair Oaks Ranch, Texas",1,3,3,29.7457771,-98.6433561
+"Faith, North Carolina",1,1,1,35.587084,-80.4628385
+"Falls Church, Virginia",1,6,6,38.882334,-77.1710914
+"Federal Way, Washington",1,2,2,47.313494,-122.33931
+"Ferndale, Michigan",1,3,3,42.4605917,-83.1346478
+"Fort Lauderdale, Florida",1,1,1,26.1223084,-80.1433786
+"Fort Wayne, Indiana",1,1,1,41.0799898,-85.1386015
+"Fort Worth, Texas",2,1.5,2,32.753177,-97.3327459
+"Fostoria, Ohio",1,5,5,41.1574297,-83.4141061
+"Franklin, Tennessee",1,4,4,35.925206,-86.8689419
+"Freehold, New Jersey",1,1,1,40.2601096,-74.2737573
+"Fresno, California",1,5,5,36.7394421,-119.78483
+"Friendswood, Texas",1,1,1,29.5293998,-95.2010447
+"Gainesville, Georgia",1,9,9,34.2978794,-83.8240663
+"Gibbons, Alberta",1,1,1,53.8242258,-113.3282658
+"Glasgow, Kentucky",1,7,7,36.995906,-85.9124842
+"Glen Ellyn, Illinois",1,5,5,41.8775293,-88.0670118
+"Glendale, Arizona",1,2,2,33.5386858,-112.185994
+"Glenwood, Illinois",1,1,1,41.5424867,-87.6022765
+"Grand Rapids, Michigan",1,1,1,42.9632425,-85.6678639
+"Granite Bay, California",1,7,7,38.762173,-121.1850057
+"Greeley, Colorado",1,3,3,40.4233142,-104.7091322
+"Green Bay, Wisconsin",1,8,8,44.5126379,-88.0125794
+"Grosse Pointe, Michigan",2,4.5,6,42.3861485,-82.9118591
+"Guilderland, New York",1,1,1,42.704522,-73.911513
+"Hanover, Massachusetts",1,6,6,42.1131572,-70.8119859
+"Hartford, Connecticut",1,5,5,41.764582,-72.6908547
+"Havre, Montana",1,5,5,48.5536972,-109.677802
+"Helena, Montana",1,1,1,46.5927425,-112.036277
+"Hermosa Beach, California",2,5.5,10,33.8637822,-118.3992143
+"Hickory, North Carolina",1,1,1,35.7333312,-81.3442915
+"Highlands Ranch, Colorado",1,1,1,39.548359,-105.0004504
+"Hollywood, California",1,2,2,34.0980031,-118.329523
+"Homewood, Alabama",1,7,7,33.4737098,-86.8084509
+"Honolulu, Hawaii",1,1,1,21.304547,-157.855676
+"Houston, Texas",2,4,5,29.7589382,-95.3676974
+"Hubbard, Ohio",1,1,1,41.1564262,-80.5688876
+"Huntsville, Texas",1,8,8,30.7235263,-95.5507771
+"Irving, Texas",1,9,9,32.8295183,-96.9442177
+"Jacksonville, Florida",1,5,5,30.3262247,-81.6579179
+"Jenks, Oklahoma",1,4,4,36.0228734,-95.9683278
+"Jersey City, New Jersey",1,2,2,40.7215682,-74.047455
+"Johnson City, Tennessee",1,1,1,36.3167671,-82.352903
+"Jupiter, Florida",1,10,10,26.9342246,-80.0942087
+"Kansas City, Missouri",2,1,1,39.100105,-94.5781416
+"Kings Park, New York",1,5,5,40.8890985,-73.246843
+"Kuna, Idaho",1,5,5,43.4918307,-116.420122
+"Laguna Beach, California",1,1,1,33.5426975,-117.785366
+"Lake Charles, Louisiana",1,5,5,30.2305095,-93.2169807
+"Langhorne, Pennsylvania",1,6,6,40.1761812,-74.9202481
+"Lanham, Maryland",1,4,4,38.965365,-76.8417927
+"Lawton, Oklahoma",1,1,1,34.6051975,-98.3952279
+"Lexington, Massachusetts",1,1,1,42.4473175,-71.2245003
+"Lexington, South Carolina",1,1,1,33.8986841,-81.275054
+"Lindenhurst, New York",1,7,7,40.6867667,-73.3734547
+"Lions Bay, British Columbia",1,4,4,49.45875,-123.23533
+"Lockport, Illinois",1,1,1,41.5894753,-88.057837
+"London, Ontario",1,1,1,42.9836747,-81.2496068
+"London, England",1,1,1,51.5074456,-0.1277653
+"Long Beach Island, New Jersey",1,1,1,39.6348655,-74.1855757
+"Long Beach, California",1,2,2,33.7690164,-118.191604
+"Long Island, New York",1,1,1,40.8514971,-73.0994297
+"Longmeadow, Massachusetts",1,7,7,42.0504498,-72.5824639
+"Los Angeles, California",7,5.14285714285714,11,34.0536909,-118.242766
+"Los Gatos, California",1,1,1,37.226611,-121.9746797
+"Louisville, Kentucky",2,3,5,38.2542376,-85.759407
+"Lubbock, Texas",1,5,5,33.5855677,-101.8470215
+"Macon, Georgia",1,1,1,32.8406946,-83.6324022
+"Madison, Mississippi",1,6,6,32.6308318,-90.0040817
+"Madison, Wisconsin",1,10,10,43.07469,-89.3841663
+"Manhattan Beach, California",3,1,1,33.8872777,-118.4104324
+"Manhattan, New York",1,4,4,40.7579554,-73.9855319
+"Manteno, Illinois",1,5,5,41.2501677,-87.8326423
+"Marietta, Georgia",1,6,6,33.9528472,-84.5496148
+"Marina Del Rey, California",1,1,1,33.9776848,-118.448647
+"Marina del Rey, California",1,2,2,33.9776848,-118.448647
+"Marion, Massachusetts",1,4,4,41.7001043,-70.7628129
+"Marysville, Washington",1,2,2,48.0517429,-122.1768209
+"Mashpee, Massachusetts",1,3,3,41.6484421,-70.4811383
+"Massapequa, New York",1,1,1,40.669501,-73.4698253
+"McMinnville, Oregon",1,11,11,45.2100367,-123.194463
+"Meadow Vista, California",1,1,1,38.9977559,-121.0226749
+"Medicine Hat, Alberta",1,8,8,50.04303,-110.679016
+"Meriden, Connecticut",1,7,7,41.5381535,-72.8070435
+"Miami, Florida",2,6,11,25.7741566,-80.1935973
+"Midland, Texas",1,1,1,31.83688,-102.0103767
+"Minneapolis, Minnesota",2,1.5,2,44.9772995,-93.2654692
+"Moline, Illinois",1,3,3,41.5058344,-90.5136642
+"Monroe Township, New Jersey",1,3,3,40.335756,-74.4334464
+"Monroe, Michigan",3,4.33333333333333,11,41.9153358,-83.5135665
+"Monroe, New York",1,1,1,41.3304767,-74.1866348
+"Monterey, California",1,6,6,36.2231079,-121.387742
+"Moraga, California",1,1,1,37.834897,-122.12883
+"Mountain View, California",1,1,1,37.3893889,-122.0832101
+"Mukilteo, Washington",1,3,3,47.9474034,-122.3036992
+"Murrieta, California",1,1,1,33.560832,-117.210656
+"Nahariya, Israel",1,3,3,33.006306,35.0945579
+"Nashville, Tennessee",2,6.5,11,36.1622767,-86.7742984
+"New Castle, Indiana",1,1,1,39.9289351,-85.3702477
+"New York City, New York",6,1,1,40.7127281,-74.0060152
+"New York, New York",3,6.33333333333333,11,40.7127281,-74.0060152
+"Newport Beach, California",3,1.66666666666667,2,33.6170092,-117.9294401
+"North Bay Village, Florida",1,1,1,25.8462075,-80.1539351
+"North Sydney, Nova Scotia",1,2,2,46.2105845,-60.2470914
+"North Wales, Pennsylvania",1,1,1,40.2109404,-75.2782317
+"Novi, Michigan",1,2,2,42.48059,-83.4754913
+"Oak Creek, Wisconsin",1,1,1,42.898729,-87.9177966
+"Oakley, Kansas",1,6,6,39.126385,-100.855611
+"Oceanside, California",1,7,7,33.1958696,-117.379483
+"Odessa, Florida",1,5,5,28.183222,-82.5540279
+"Odessa, Texas",1,7,7,31.8457149,-102.367687
+"Oklahoma City, Oklahoma",1,1,1,35.4729886,-97.5170536
+"Olney, Maryland",1,3,3,39.1532123,-77.0668408
+"Orlando, Florida",6,3.16666666666667,6,28.5421218,-81.379045
+"Overland Park, Kansas",1,1,1,38.9742502,-94.6851702
+"Pacifica, California",1,1,1,37.5980374,-122.4995234
+"Palm Coast, Florida",1,4,4,29.5541432,-81.2207673
+"Palm Harbor, Florida",1,1,1,28.0856815,-82.756907
+"Paragould, Arkansas",1,4,4,36.0584021,-90.4973286
+"Park Ridge, Illinois",1,3,3,42.0112329,-87.8406031
+"Pasadena, California",1,4,4,34.1476507,-118.144155
+"Peculiar, Missouri",1,4,4,38.7145481,-94.4611204
+"Penha, Brazil",1,1,1,-26.775418,-48.6465251
+"Pepper Pike, Ohio",1,2,2,41.478387,-81.46373
+"Philadelphia, Pennsylvania",1,1,1,39.9527237,-75.1635262
+"Phillips Ranch, California",1,4,4,34.0345307,-117.7710173
+"Phoenix, Arizona",1,2,2,33.4484367,-112.074141
+"Plantation, Florida",1,5,5,26.1275862,-80.2331036
+"Playa Vista, California",1,1,1,33.9760102,-118.4181654
+"Portland, Connecticut",1,2,2,41.5729076,-72.6406905
+"Portland, Oregon",1,1,1,45.5202471,-122.674194
+"Portola Valley, California",1,5,5,37.3736298,-122.219047
+"Providence, Rhode Island",1,1,1,41.8239891,-71.4128343
+"Quincy, Massachusetts",1,1,1,42.2509914,-71.0037374
+"Raleigh, North Carolina",1,6,6,35.7803977,-78.6390989
+"Ramsey, New Jersey",1,5,5,41.0573188,-74.1409771
+"Rialto, California",1,5,5,34.1064001,-117.3703235
+"Ridgefield, Connecticut",1,1,1,41.2814842,-73.4981792
+"Rochester, New York",2,4,6,43.157285,-77.615214
+"Rock Island, Illinois",1,1,1,41.4411786,-90.5766144
+"Rockdale, Illinois",1,1,1,41.506142,-88.1145036
+"Rockport, Massachusetts",1,1,1,42.6572112,-70.6177486
+"Roslyn, New York",1,11,11,40.7998227,-73.6509621
+"Sacramento, California",2,1,1,38.5810606,-121.493895
+"Saddle River, New Jersey",1,1,1,41.0317637,-74.1020866
+"Saint Paul, Minnesota",1,3,3,44.9497487,-93.0931028
+"San Antonio, Texas",1,7,7,29.4246002,-98.4951405
+"San Clemente, California",1,5,5,33.4270275,-117.6124179
+"San Diego, California",6,2.16666666666667,6,32.7174202,-117.162772
+"San Francisco, California",7,2.57142857142857,5,37.7879363,-122.4075201
+"San Luis Obispo, California",1,7,7,35.3540209,-120.375716
+"San Rafael, California",1,5,5,37.9747795,-122.5316686
+"Sanford, Florida",1,1,1,28.8117345,-81.2680223
+"Santa Barbara, California",2,1,1,34.4221319,-119.702667
+"Santa Monica, California",2,2.5,3,34.0194704,-118.491227
+"Sarnia, Ontario",1,2,2,42.9743821,-82.403533
+"Sauquoit, New York",1,3,3,43.0042365,-75.2598859
+"Scottsdale, Arizona",2,10,10,33.4942189,-111.926018
+"Seven Springs, North Carolina",1,2,2,35.2266001,-77.8465107
+"Sherman Oaks, California",2,3,5,34.1508718,-118.448986
+"Skokie, Illinois",1,4,4,42.0262972,-87.7521069
+"Sonoma, California",1,10,10,38.5110803,-122.8473388
+"Spring, Texas",1,6,6,30.070979,-95.401342
+"St. Augustine, Florida",1,10,10,29.8946952,-81.3145395
+"St. George, Utah",1,11,11,37.1098772,-113.5832063
+"St. Louis, Missouri",3,2.33333333333333,3,38.6254063,-90.190009
+"St. Petersburg, Florida",2,8.5,11,27.7712264,-82.6340259
+"Staten Island, New York",1,1,1,40.5834557,-74.1496048
+"Steamboat Springs, Colorado",2,3.5,6,40.4848003,-106.831735
+"Stilwell, Kansas",1,6,6,38.7691755,-94.6563454
+"Stratford, Connecticut",1,1,1,41.1923646,-73.1304917
+"Sturgeon Bay, Wisconsin",1,1,1,44.8341639,-87.377042
+"Sugarloaf, Pennsylvania",1,1,1,41.001501,-76.0832639
+"Sylvan Lake, Michigan",1,4,4,42.6114217,-83.3285467
+"Tacoma, Washington",2,7,7,47.2455013,-122.438329
+"Tampa, Florida",2,11,11,27.9449854,-82.4583107
+"Toronto, Ontario",1,6,6,43.6534817,-79.3839347
+"Tulsa, Oklahoma",2,5.5,6,36.1563122,-95.9927516
+"Tustin, California",1,1,1,33.7458511,-117.826166
+"Upper Dublin, Pennsylvania",1,9,9,40.1524028,-75.1369836
+"Vail, Colorado",1,11,11,39.6438028,-106.3888231
+"Vancouver, British Columbia",1,1,1,49.2608724,-123.113952
+"Vancouver, Washington",1,1,1,45.6306954,-122.6744557
+"Venice, California",1,1,1,33.995044,-118.4668875
+"Virginia Beach, Virginia",1,1,1,36.8496579,-75.9760751
+"Walhalla, South Carolina",1,4,4,34.7648176,-83.0640417
+"Wall, New Jersey",1,1,1,40.1225102,-74.077404
+"Warminster, Pennsylvania",1,3,3,40.2067751,-75.0996159
+"Warsaw, Indiana",1,8,8,41.2381017,-85.8530544
+"Warwick, Rhode Island",1,7,7,41.6992717,-71.4586114
+"Washington, Illinois",1,8,8,38.3662806,-89.4201902
+"Waukesha, Wisconsin",2,10,10,43.0622536,-88.3123889
+"Wauseon, Ohio",1,1,1,41.546069,-84.1362047
+"Waverly, Iowa",1,6,6,42.7258451,-92.4746033
+"Wellington, Florida",1,4,4,26.6549551,-80.2375279
+"West Alexandria, Ohio",1,4,4,39.7444973,-84.5321727
+"Westchester, California",1,1,1,33.9597349,-118.400632
+"Westlake Village, California",1,9,9,34.1460234,-118.8061794
+"White Plains, New York",1,6,6,41.0339862,-73.7629097
+"Wichita, Kansas",1,1,1,37.6922361,-97.3375448
+"Williston, North Dakota",1,1,1,48.1465457,-103.621814
+"Windsor Locks, Connecticut",1,11,11,41.9312103,-72.6313849
+"Winter Park, Florida",1,5,5,28.5977707,-81.3510264
+"Woodside, California",1,2,2,37.4280637,-122.2507435
+"Woodstock, Illinois",1,5,5,42.3147529,-88.4474302
+"Worcester, Massachusetts",1,4,4,42.2625621,-71.8018877
+"Wynola, California",1,1,1,33.0975435,-116.6455757
+"Yorba Linda, California",1,1,1,33.8901096,-117.8249705

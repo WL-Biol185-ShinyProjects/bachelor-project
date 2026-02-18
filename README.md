@@ -19,3 +19,6 @@ install.packages("showtext")
 library(showtext)
 font_add_google("Lobster")
 
+View(contestants)
+View(seasons)
+
