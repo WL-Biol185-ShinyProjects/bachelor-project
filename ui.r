@@ -46,15 +46,9 @@ ui <- fluidPage(
  .clickable-side:hover {
         opacity: 0.9;
       }
-      
-      /* Map styling */
-      .map-container {
-        height: 100vh;
-        width: 100vw;
-      }
-
     "))
   ),
+
   
   
   tabsetPanel(
@@ -118,29 +112,71 @@ ui <- fluidPage(
                )
              )
           ),
-    
-    # BACHELOR MAP
+    # BACHELOR MAP WITH DROPDOWN
     tabPanel("Bachelor Map",
              tags$div(
-               class = "map-container",
-               leafletOutput("bachelor_map", width = "60%", height = "100%")
+               style = "display: flex; height: 100vh;",
+               
+               # Map on the left (75% width)
+               tags$div(
+                 style = "width: 75%; height: 100%;",
+                 leafletOutput("bachelor_map", width = "100%", height = "100%")
+               ),
+               
+               # Sidebar on the right (25% width)
+               tags$div(
+                 style = "width: 25%; height: 100%; background-color: #FFF5F5; padding: 20px; overflow-y: auto;",
+                 
+                 h3("Filter by State", style = "color: #DC143C; font-family: 'Lobster', cursive;"),
+                 
+                 selectInput("bachelor_state", 
+                             "Choose a state:",
+                             choices = c("All States" = "all"),
+                             selected = "all"),
+                 
+                 hr(),
+                 
+                 h4("Contestants", style = "color: #DC143C;"),
+                 uiOutput("bachelor_contestants_list")
+               )
              )
     ),
     
-    # BACHELORETTE MAP
+    # BACHELORETTE MAP WITH DROPDOWN
     tabPanel("Bachelorette Map",
              tags$div(
-               class = "map-container",
-               leafletOutput("bachelorette_map", width = "60%", height = "100%")
+               style = "display: flex; height: 100vh;",
+               
+               # Map on the left (75% width)
+               tags$div(
+                 style = "width: 75%; height: 100%;",
+                 leafletOutput("bachelorette_map", width = "100%", height = "100%")
+               ),
+               
+               # Sidebar on the right (25% width)
+               tags$div(
+                 style = "width: 25%; height: 100%; background-color: #FFF0F5; padding: 20px; overflow-y: auto;",
+                 
+                 h3("Filter by State", style = "color: #C71585; font-family: 'Lobster', cursive;"),
+                 
+                 selectInput("bachelorette_state", 
+                             "Choose a state:",
+                             choices = c("All States" = "all"),
+                             selected = "all"),
+                 
+                 hr(),
+                 
+                 h4("Contestants", style = "color: #C71585;"),
+                 uiOutput("bachelorette_contestants_list")
+               )
              )
     ),
     
-    # YOUR DATA UPLOAD TAB (or next tab)
+    # YOUR DATA UPLOAD TAB
     tabPanel("Upload Data",
              fileInput("file1", "Choose CSV File", accept = ".csv"),
              tableOutput("contents")
     )
   )
-)
+  )
 
-      
