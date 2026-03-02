@@ -83,32 +83,40 @@ ui <- fluidPage(
              tags$div(
                class = "full-screen",
                style = "display: flex; position: relative;",
-               onclick = "Shiny.setInputValue('splash_click', Math.random());",
+               
     
                
                # LEFT SIDE - RED (Bachelor)
                tags$div(
-                 style = "width: 50%; background-color: #D21A00; display: flex; justify-content: center; align-items: center;",
+                 class = "clickable-side",
+                 style = "width: 50%; background-color: #D21A00; display: flex; flex-direction: column; justify-content: center; align-items: center;",
                  onclick = "Shiny.setInputValue('bachelor_click', Math.random());",
                  tags$h1("BACHELOR", 
-                         style = "color: white; font-size: 72px; font-weight: bold; font-family: 'Georgia', serif;")
-               ),
+                         style = "color: white; font-size: 72px; font-weight: bold; font-family: 'Georgia', serif; pointer-events:none; margin-bottom: 20px;"),
+                 tags$p("Click here to find out where the Bachelor contestants are from", 
+                        style = "color: white; font-size: 24px; font-family: 'Lobster', cursive; pointer-events: none; margin-top: 0;")
+                 
+                 ),
                
                # RIGHT SIDE - PINK (Bachelorette)
                tags$div(
-                 style = "width: 50%; background-color: #F8DEE7; display: flex; justify-content: center; align-items: center;",
+                 class = "clickable-side",
+                 style = "width: 50%; background-color: #F8DEE7; display: flex; flex-direction: column; justify-content: center; align-items: center;",
                  onclick = "Shiny.setInputValue('bachelorette_click', Math.random());",
                  tags$h1("BACHELORETTE", 
-                         style = "color: white; font-size: 72px; font-weight: bold; font-family: 'Georgia', serif;")
-               ),
+                         style = "color: white; font-size: 72px; font-weight: bold; font-family: 'Georgia', serif; pointer-events:none; margin-bottom: 20px;"),
+                 tags$p("Click here to find out where the Bachelorette contestants are from", 
+                        style = "color: white; font-size: 24px; font-family: 'Lobster', cursive; pointer-events: none; margin-top: 0;")
+                 
+                 ),
                
-               # MIDDLE BUTTON (overlaid)
+               # MIDDLE BUTTON (overlaid) - MOVED DOWN AND BIGGER
                tags$div(
-                 class = "center-button",
+                 style = "position: absolute; top: 75%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; pointer-events: auto;",
                  actionButton("start_btn", 
-                              "What are your chances of finding the one?", 
+                              "Click here to find out your chances of finding the one", 
                               class = "btn-lg",
-                              style = "background-color: white; color: #DC143C; font-weight: bold; padding: 20px 40px; font-size: 18px; border: 3px solid #DC143C;")
+                              style = "background-color: white; color: #DC143C; font-weight: bold; padding: 30px 60px; font-size: 24px; border: 4px solid #DC143C;")
                )
              )
           ),

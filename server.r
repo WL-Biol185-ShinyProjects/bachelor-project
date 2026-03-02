@@ -154,7 +154,7 @@ server <- function(input, output, session) {
   
   # Render Bachelorette Map
   output$bachelorette_map <- renderLeaflet({
-    data <- bachelorette_filtered_data %>% 
+    data <- bachelorette_filtered_data() %>% 
       filter(!is.na(latitude) & !is.na(longitude))
   
     
