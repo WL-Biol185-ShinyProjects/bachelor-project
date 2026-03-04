@@ -180,7 +180,71 @@ ui <- fluidPage(
              )
     ),
     
-    # YOUR DATA UPLOAD TAB
+    # SURVEY TAB
+    tabPanel("Survey",
+             tags$div(
+               style = "height: 100vh; background: linear-gradient(135deg, #D21A00 0%, #F8DEE7 100%); display: flex; justify-content: center; align-items: center; overflow-y: auto;",
+               
+               tags$div(
+                 style = "background-color: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 600px; width: 90%;",
+                 
+                 h2("Find Your Chances!", 
+                    style = "text-align: center; color: #DC143C; font-family: 'Lobster', cursive; font-size: 48px; margin-bottom: 30px;"),
+                 
+                 p("Answer a few questions to see your chances of finding love on The Bachelor or Bachelorette!",
+                   style = "text-align: center; color: #666; font-size: 18px; margin-bottom: 40px;"),
+                 
+                 # Gender Selection
+                 radioButtons("survey_gender",
+                              "I am a:",
+                              choices = c("Woman (Bachelor Contestant)" = "female",
+                                          "Man (Bachelorette Contestant)" = "male"),
+                              selected = character(0)),
+                 
+                 br(),
+                 
+                 # State Selection
+                 selectizeInput("survey_state",
+                                "What state are you from?",
+                                choices = NULL,
+                                options = list(placeholder = 'Select your state...')),
+                 
+                 br(),
+                 
+                 # Occupation Selection
+                 selectizeInput("survey_occupation",
+                                "What is your occupation?",
+                                choices = NULL,
+                                options = list(placeholder = 'Select your occupation...')),
+                 
+                 br(),
+                 
+                 # Age Input
+                 numericInput("survey_age",
+                              "How old are you?",
+                              value = NULL,
+                              min = 21,
+                              max = 65,
+                              step = 1),
+                 
+                 br(),
+                 
+                 # Submit Button
+                 actionButton("submit_survey",
+                              "Calculate My Chances!",
+                              class = "btn-lg",
+                              style = "width: 100%; background-color: #DC143C; color: white; font-weight: bold; padding: 15px; font-size: 24px; border: none; font-family: 'Lobster', cursive;"),
+                 
+                 br(), br(),
+                 
+                 # Results Display
+                 uiOutput("survey_results")
+               )
+             )
+    ),
+    
+    
+     # YOUR DATA UPLOAD TAB
     tabPanel("Upload Data",
              fileInput("file1", "Choose CSV File", accept = ".csv"),
              tableOutput("contents")
