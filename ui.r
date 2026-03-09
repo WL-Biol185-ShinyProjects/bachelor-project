@@ -243,11 +243,60 @@ ui <- fluidPage(
              )
     ),
     
-    
-     # YOUR DATA UPLOAD TAB
-    tabPanel("Upload Data",
-             fileInput("file1", "Choose CSV File", accept = ".csv"),
-             tableOutput("contents")
+    # DATA ANALYSIS TAB
+    tabPanel("Data Analysis",
+             tags$div(
+               style = "height: 100vh; background-color: #FFF5F5; padding: 40px; overflow-y: auto;",
+               
+               h2("Contestant Performance Analysis", 
+                  style = "text-align: center; color: #DC143C; font-family: 'Lobster', cursive; font-size: 48px; margin-bottom: 30px;"),
+               
+               # Show Selection Buttons
+               tags$div(
+                 style = "text-align: center; margin-bottom: 40px;",
+                 
+                 actionButton("analysis_bachelor",
+                              "Bachelor Data",
+                              class = "btn-lg",
+                              style = "background-color: #D21A00; color: white; font-weight: bold; padding: 15px 40px; font-size: 20px; margin: 10px; border: none; font-family: 'Lobster', cursive;"),
+                 
+                 actionButton("analysis_bachelorette",
+                              "Bachelorette Data",
+                              class = "btn-lg",
+                              style = "background-color: #F8DEE7; color: #DC143C; font-weight: bold; padding: 15px 40px; font-size: 20px; margin: 10px; border: 2px solid #DC143C; font-family: 'Lobster', cursive;")
+               ),
+               
+               # Current selection display
+               uiOutput("analysis_selection"),
+               
+               hr(),
+               
+               # Age Analysis Section
+               tags$div(
+                 style = "background-color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);",
+                 
+                 h3("Age Distribution", 
+                    style = "color: #DC143C; font-family: 'Lobster', cursive; font-size: 32px; margin-bottom: 20px;"),
+                 
+                 p("This chart shows the number of contestants at each age.",
+                   style = "color: #666; font-size: 16px; margin-bottom: 20px;"),
+                 
+                 plotOutput("age_performance_plot", height = "400px")
+               ),
+               
+               # Occupation Analysis Section
+               tags$div(
+                 style = "background-color: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);",
+                 
+                 h3("Top 15 Most Common Occupations", 
+                    style = "color: #DC143C; font-family: 'Lobster', cursive; font-size: 32px; margin-bottom: 20px;"),
+                 
+                 p("This chart shows the most frequently appearing occupations on the show.",
+                   style = "color: #666; font-size: 16px; margin-bottom: 20px;"),
+                 
+                 plotOutput("occupation_performance_plot", height = "500px")
+               )
+             )
     )
   )
   )

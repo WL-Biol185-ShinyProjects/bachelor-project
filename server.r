@@ -521,6 +521,130 @@ server <- function(input, output, session) {
       
       output$survey_results <- renderUI({})
     })
+    
+    # ========== DATA ANALYSIS LOGIC ==========
+    
+    # Reactive value to store which show is selected for analysis
+    analysis_show <- reactiveVal("The Bachelor")
+    
+    # Update when Bachelor button is clicked
+    observeEvent(input$analysis_bachelor, {
+      analysis_show("The Bachelor")
+    })
+    
+    # Update when Bachelorette button is clicked
+    observeEvent(input$analysis_bachelorette, {
+      analysis_show("The Bachelorette")
+    })
+    
+    # Display current selection
+    output$analysis_selection <- renderUI({
+      show_color <- if (analysis_show() == "The Bachelor") "#D21A00" else "#F8DEE7"
+      text_color <- if (analysis_show() == "The Bachelor") "white" else "#DC143C"
+      
+      tags$div(
+        style = paste0("text-align: center; padding: 15px; background-color: ", show_color, 
+                       "; border-radius: 10px; margin-bottom: 20px;"),
+        h4(paste0("Currently Viewing: ", analysis_show()),
+           style = paste0("color: ", text_color, "; font-family: 'Lobster', cursive; margin: 0;"))
+      )
+    })
+    
+    # Helper function to get week number (reuse from survey)
+    get_week_num_analysis <- function(eliminated) {
+      if (grepl("Winner", eliminated, ignore.case = TRUE)) {
+        return(11)
+      } else if (grepl("Runner", eliminated, ignore.case = TRUE)) {
+        return(10)
+      } else if (grepl("Week", eliminated, ignore.case = TRUE)) {
+        week_num <- as.numeric(gsub(".*Week ([0-9]+).*", "\\1", eliminated))
+        return(week_num)
+      } else {
+        return(1)
+      }
+    }
+    
+    # Age vs Performance Plot
+    output$age_performance_plot <- renderPlot({
+      # Get data for selected show
+      show_data <- contestants %>%
+        filter(Show == analysis_show(), !is.na(Age))
+      
+      # Count contestants by age
+      age_summary <- show_data %>%
+        group_by(Age) %>%
+        summarise(count = n()) %>%
+        arrange(Age)
+
+      
+      # Plot color based on show
+      plot_color <- if (analysis_show() == "The Bachelor") "#DC143C" else "#FF69B4"
+      
+      ggplot(age_summary, aes(x = Age, y = count)) +
+        geom_bar(stat = "identity", fill = plot_color, alpha = 0.7) +
+        geom_text(aes(label = count), vjust = -0.5, size = 3, color = "#333") +
+        labs(
+          title = paste0(analysis_show(), ": Number of Contestants by Age"),
+          subtitle = "Total contestants at each age",
+          x = "Age",
+          y = "Number of Contestants"
+          
+        ) +
+        theme_minimal() +
+        theme(
+          plot.title = element_text(size = 18, face = "bold", color = "#DC143C"),
+          plot.subtitle = element_text(size = 12, color = "#666"),
+          axis.title = element_text(size = 14, face = "bold"),
+          axis.text = element_text(size = 12),
+          panel.grid.major.x = element_blank()
+        ) +
+        scale_y_continuous(breaks = seq(0, max(age_summary$count) + 5, 5)) +
+        scale_x_continuous(breaks = seq(min(age_summary$Age), max(age_summary$Age), 1))
+    })
+    
+    # Occupation vs Performance Plot
+    output$occupation_performance_plot <- renderPlot({
+      # Get data for selected show
+      show_data <- contestants %>%
+        filter(Show == analysis_show(), !is.na(Job)) 
+      
+      # Calculate average week by occupation, get top 15
+      occupation_summary <- show_data %>%
+        group_by(Job) %>%
+        summarise(count = n()) %>%
+        arrange(desc(count)) %>%
+        head(15) %>%
+        arrange(count)  # Sort by count for better visualization
+      
+      
+      # Plot color based on show
+      plot_color <- if (analysis_show() == "The Bachelor") "#DC143C" else "#FF69B4"
+      
+      ggplot(occupation_summary, aes(x = reorder(Job, count), y = count)) +
+        geom_bar(stat = "identity", fill = plot_color, alpha = 0.7) +
+        geom_text(aes(label = count), hjust = -0.1, size = 3.5, color = "#333") +
+        coord_flip() +
+        labs(
+          title = paste0(analysis_show(), ": Top 15 Most Common Occupations"),
+          subtitle = "Sorted by number of contestants",
+          x = "Occupation",
+          y = "Number of Contestants"
+          
+        ) +
+        theme_minimal() +
+        theme(
+          plot.title = element_text(size = 18, face = "bold", color = "#DC143C"),
+          plot.subtitle = element_text(size = 12, color = "#666"),
+          axis.title = element_text(size = 14, face = "bold"),
+          axis.text.y = element_text(size = 11),
+          axis.text.x = element_text(size = 12),
+          panel.grid.major.y = element_blank()
+        ) +
+        scale_y_continuous(breaks = seq(0, max(occupation_summary$count) + 2, 2))
+      
+    })
+    
+    
 }
 
 
