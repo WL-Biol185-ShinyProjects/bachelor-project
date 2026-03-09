@@ -288,14 +288,14 @@ server <- function(input, output, session) {
       # Helper function to get week number
       get_week_num <- function(eliminated) {
         if (grepl("Winner", eliminated, ignore.case = TRUE)) {
-          return(11)
-        } else if (grepl("Runner", eliminated, ignore.case = TRUE)) {
-          return(10)
+          11
+        } else if (grepl("Runner-up", eliminated, ignore.case = TRUE)) {
+          10
         } else if (grepl("Week", eliminated, ignore.case = TRUE)) {
           week_num <- as.numeric(gsub(".*Week ([0-9]+).*", "\\1", eliminated))
-          return(week_num)
+          week_num
         } else {
-          return(1)
+          1
         }
       }
       
@@ -304,137 +304,140 @@ server <- function(input, output, session) {
       show_contestants <- contestants %>%
         filter(Show == show_name) %>%
         mutate(week_number = sapply(Eliminated, get_week_num)) 
-          
+
+      # Total number of contestants ever on this show
+      total_contestants <- nrow(show_contestants)
+      
+      # Calculate how common each attribute is
+      
+      # 1. State likelihood - what % of contestants came from this state?
+      state_contestants <- show_contestants %>%
+        filter(!is.na(state), state == input$survey_state)
+      
+      state_count <- nrow(state_contestants)
+      state_likelihood <- (state_count / total_contestants) * 100
+      
+      # 2. Occupation likelihood - what % of contestants had this job?
+      job_contestants <- show_contestants %>%
+        filter(!is.na(Job), Job == input$survey_occupation)
+      
+      job_count <- nrow(job_contestants)
+      job_likelihood <- (job_count / total_contestants) * 100
+      
+      # 3. Age likelihood - what % of contestants were within ±3 years of this age?
+      age_contestants <- show_contestants %>%
+        filter(!is.na(Age), abs(Age - input$survey_age) <= 3)
+      
+      age_count <- nrow(age_contestants)
+      age_likelihood <- (age_count / total_contestants) * 100 
+     
       
       
-      # Filter contestants with similar characteristics
-      similar_contestants <- contestants %>%
-        filter(Show == show_name,
-               state == input$survey_state | is.na(state),
-               Job == input$survey_occupation | is.na(Job)) %>%
-        mutate(age_diff = abs(Age - input$survey_age))
+      # 4. Check for exact matches (same state + job + age)
+      exact_matches <- show_contestants %>%
+        filter(
+          !is.na(state), state == input$survey_state,
+          !is.na(Job), Job == input$survey_occupation,
+          !is.na(Age), Age == input$survey_age
+        )
       
-      # Calculate week number for each contestant
-      get_week_number <- function(eliminated) {
-        if (grepl("Winner", eliminated, ignore.case = TRUE)) {
-          return(11)
-        } else if (grepl("Runner", eliminated, ignore.case = TRUE)) {
-          return(10)
-        } else if (grepl("Week", eliminated, ignore.case = TRUE)) {
-          week_num <- as.numeric(gsub(".*Week ([0-9]+).*", "\\1", eliminated))
-          return(week_num)
+      exact_match_count <- nrow(exact_matches)
+      
+      #Check if any exact match was a WINNER
+      exact_match_winner <- exact_matches %>%
+        filter(week_number == 11)
+      
+      has_winner_match <- nrow(exact_match_winner) > 0
+      
+      
+      # Calculate overall casting likelihood
+      # If exact matches exist, boost the percentage
+      if (exact_match_count > 0) {
+        # EXACT MATCH = 100% casting chance
+        casting_percentage <- 100
+        #If exact match includes a winner
+        if (has_winner_match) {
+          predicted_week <- 11
+          is_winner_prediction <- TRUE
         } else {
-          return(1)
+          # Use the EXACT week number from best-performing exact match
+          predicted_week <- max(exact_matches$week_number, na.rm = TRUE)
+          is_winner_prediction <- FALSE
         }
+        
+        if (is.na(predicted_week)) predicted_week <- 5
+      } else {
+        # No exact match - use weighted calculation
+        is_winner_prediction <- FALSE
+      
+        
+        # Weight the factors: state (20%), job (40%), age (40%)
+        base_percentage <- (state_likelihood * 0.2) + (job_likelihood * 0.4) + (age_likelihood * 0.4)
+        
+        # Normalize to a reasonable range (15% - 85%)
+        casting_percentage <- round(max(15, min(85, base_percentage)))
+        
       }
       
-      similar_contestants <- similar_contestants %>%
-        mutate(week_number = sapply(Eliminated, get_week_number))
+      
       
       # Calculate predictions based on different factors
       
-      # 1. State-based prediction
-      state_contestants <- similar_contestants %>%
-        filter(state == input$survey_state)
+      #Only calculate predicted_week if we DON'T have an exact match
+      if (exact_match_count == 0) {
+        # Calculate predicted performance (how far they'd go)
+        state_avg <- if (nrow(state_contestants) > 0) {
+          mean(state_contestants$week_number, na.rm = TRUE)
+        } else {
+          mean(show_contestants$week_number, na.rm = TRUE)
+        }
+        
+        job_avg <- if (nrow(job_contestants) > 0) {
+          mean(job_contestants$week_number, na.rm = TRUE)
+        } else {
+          mean(show_contestants$week_number, na.rm = TRUE)
+        }
+        
       
-      state_avg <- if (nrow(state_contestants) > 0) {
-        mean(state_contestants$week_number, na.rm = TRUE)
-      } else {
-        mean(similar_contestants$week_number, na.rm = TRUE)
-      }
-      
-      # 2. Occupation-based prediction
-      job_contestants <- similar_contestants %>%
-        filter(Job == input$survey_occupation)
-      
-      job_avg <- if (nrow(job_contestants) > 0) {
-        mean(job_contestants$week_number, na.rm = TRUE)
-      } else {
-        mean(similar_contestants$week_number, na.rm = TRUE)
-      }
       
       # 3. Age-based prediction
-      age_contestants <- similar_contestants %>%
-        arrange(age_diff) %>%
-        head(20)  # Top 20 closest in age
+        age_avg <- if (nrow(age_contestants) > 0) {
+          mean(age_contestants$week_number, na.rm = TRUE)
+        } else {
+          mean(show_contestants$week_number, na.rm = TRUE)
+        }
+        
       
-      age_avg <- if (nrow(age_contestants) > 0) {
-        mean(age_contestants$week_number, na.rm = TRUE)
-      } else {
-        mean(similar_contestants$week_number, na.rm = TRUE)
+      # Predicted week (how far they'd go)
+      predicted_week <- round((state_avg * 0.3 + job_avg * 0.4 + age_avg * 0.3), 1)
+      if (is.na(predicted_week)) predicted_week <- 5
       }
       
-      # Combined prediction (weighted average)
-      predicted_week <- round((state_avg * 0.3 + job_avg * 0.4 + age_avg * 0.3), 1)
-      
-      # ADD THIS - guard against NA
-      if (is.na(predicted_week)) predicted_week <- round(mean(show_contestants$week_number, na.rm = TRUE), 1)
-      if (is.na(predicted_week)) predicted_week <- 5  # fallback if still NA
       
       # Convert to success percentage (out of 11 weeks)
       success_percentage <- round((predicted_week / 11) * 100)
       
       # Generate result message
       output$survey_results <- renderUI({
-        # --- Stats for the paragraph ---
-        
-        # Number of contestants from user's state
-        state_count <- show_contestants %>%
-          filter(!is.na(state), state == input$survey_state) %>%
-          nrow()
-        
-        # Age success %: % of close-age contestants who won or were runner-up
+        # --- Calculate age success rate (ONLY thing we need to calculate here) ---
         age_success_pct <- show_contestants %>%
-          mutate(age_diff = abs(Age - input$survey_age)) %>%
-          filter(age_diff <= 3) %>%
+          filter(!is.na(Age), abs(Age - input$survey_age) <= 3) %>%
           summarise(pct = round(mean(week_number >= 10, na.rm = TRUE) * 100)) %>%
           pull(pct)
         
         if (length(age_success_pct) == 0 || is.na(age_success_pct)) age_success_pct <- 0
         
-        
-        # Number of contestants with same occupation
-        job_count <- show_contestants %>%
-          filter(!is.na(Job), Job == input$survey_occupation) %>%
-          nrow()
-        
-        # Overall success % (combined)
-        overall_success_pct <- success_percentage
-        
-        # Predicted week message
-        # --- Check for perfect match first ---
-        perfect_match <- show_contestants %>%
-          filter(
-            state == input$survey_state,
-            Job == input$survey_occupation,
-            Age == input$survey_age
-          )
-        
-        if (nrow(perfect_match) > 0) {
-          # Use the best-performing perfect match
-          best_match <- perfect_match %>% arrange(desc(week_number)) %>% slice(1)
-          predicted_week <- best_match$week_number
-          success_percentage <- 100
-          
+        # --- Week message (using predicted_week already calculated) ---
+        week_msg <- if (is_winner_prediction) {
+          "Congratulations, you will find love!🌹"
+        } else if (predicted_week >= 10.5) {
+          "If cast, you'd likely find love!"
         } else {
-          # Combined prediction (weighted average)
-          predicted_week <- round((state_avg * 0.3 + job_avg * 0.4 + age_avg * 0.3), 1)
-          
-          # Guard against NA
-          if (is.na(predicted_week)) predicted_week <- round(mean(show_contestants$week_number, na.rm = TRUE), 1)
-          if (is.na(predicted_week)) predicted_week <- 5
-          
-          # Convert to success percentage (out of 11 weeks)
-          success_percentage <- round((predicted_week / 11) * 100)
+          paste0("If cast, you'd likely make it to Week ", round(predicted_week), "!")
         }
         
-        # Week message - place this AFTER the if/else block, BEFORE renderUI
-        week_msg <- if (predicted_week >= 10.5) {
-          "Congratulations, you've found love!"
-        } else {
-          paste0("You'd likely make it ", round(predicted_week), " week", if (round(predicted_week) != 1) "s" else "", "!")
-        }
         
+        # --- Display NEW FORMAT ---
         tags$div(
           style = "margin-top: 30px; padding: 30px; background: linear-gradient(135deg, #FFE4E1 0%, #FFF5F5 100%); border-radius: 15px; text-align: center;",
           
@@ -443,29 +446,59 @@ server <- function(input, output, session) {
           tags$div(
             style = "background-color: white; padding: 30px 40px; border-radius: 10px; margin: 20px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;",
             
+            # PARAGRAPH with state, age, job stats (uses variables already calculated)
             tags$p(
               paste0(
                 "You chose the state of ", input$survey_state, ". There have been ", state_count,
-                " contestant", if (state_count != 1) "s" else "", " on ", show_name, " from your state. ",
-                "Your age of ", input$survey_age, " has a ", age_success_pct, "% chance of success on the show. ",
-                "We have had ", job_count, " ", input$survey_occupation,
-                if (job_count != 1) "s" else "", " compete on ", show_name, "."
+                " contestant", if (state_count != 1) "s" else "", " on ", show_name, " from your state",
+                if (state_count > 0) paste0(" (", round(state_likelihood, 1), "% of all contestants)") else "", ". ",
+                "Your age of ", input$survey_age, " has appeared ", age_count, " time",
+                if (age_count != 1) "s" else "", " on the show",
+                if (age_count > 0) paste0(" (", round(age_likelihood, 1), "% of all contestants)") else "", ". ",
+                "We've had ", job_count, " ", input$survey_occupation,
+                if (job_count != 1) "s" else "", " compete on ", show_name,
+                if (job_count > 0) paste0(" (", round(job_likelihood, 1), "% of contestants)") else "", "."
               ),
               style = "font-size: 18px; color: #333; line-height: 1.8; margin-bottom: 16px;"
             ),
             
-            tags$p(
-              paste0(
-                "Because of this, you have a ", overall_success_pct, "% chance of making it on ", show_name, "."
-              ),
-              style = "font-size: 18px; color: #333; line-height: 1.8; margin-bottom: 16px;"
+            # EXACT MATCH message (if applicable)
+            if (exact_match_count > 0) {
+              tags$p(
+                paste0(
+                  "🎉 Perfect Match! We found ", exact_match_count, " contestant",
+                  if (exact_match_count != 1) "s" else "",
+                  " with your EXACT profile (age ", input$survey_age, ", ", 
+                  input$survey_occupation, ", from ", input$survey_state, 
+                  ") who ", if (exact_match_count == 1) "was" else "were", 
+                  " cast on the show",
+                  if (has_winner_match) " — and one of them WON!" else "!",  # ← NEW
+                  " They made it to Week ", round(predicted_week),  # ← NEW
+                  if (has_winner_match) " (Winner!)" else "", "."  # ← NEW
+                ),
+                style = "font-size: 20px; color: #228B22; font-weight: bold; line-height: 1.8; margin-bottom: 16px; background-color: #E8F5E9; padding: 15px; border-radius: 8px;"  # ← CHANGED: larger font, green background
+              )
+            },
+            
+            # BIG CASTING PERCENTAGE BOX (NEW - uses casting_percentage)
+            tags$div(
+              style = "background: linear-gradient(135deg, #FFE4E1, #FFF0F5); padding: 20px; border-radius: 10px; margin: 20px 0;",
+              h1(paste0(casting_percentage, "%"), 
+                 style = "font-size: 64px; color: #DC143C; margin: 0; font-family: 'Lobster', cursive;"),
+              p("Chance of Being Cast on the Show", 
+                style = "font-size: 20px; color: #666; margin-top: 10px; font-weight: bold;")
             ),
             
+            # WEEK PREDICTION message
             tags$p(
               week_msg,
               style = paste0(
-                "font-size: 22px; font-weight: bold; font-family: 'Lobster', cursive; margin-top: 10px; ",
-                "color: ", if (predicted_week >= 10.5) "#228B22" else "#DC143C", ";"
+                "font-size: ", if (is_winner_prediction) "28px" else "20px", "; ",  # ← NEW: bigger for winner
+                "font-family: 'Lobster', cursive; margin-top: 16px; ",
+                "color: ", if (is_winner_prediction) "#D3AF37" else if (predicted_week >= 10.5) "#228B22" else "#DC143C", "; ",
+                if (is_winner_prediction) "text-shadow: 2px 2px 4px rgba(0,0,0,0.2); font-weight: bold;" else "" 
+                
+                
               )
             )
           ),
