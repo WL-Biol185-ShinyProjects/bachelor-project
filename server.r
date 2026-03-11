@@ -23,14 +23,15 @@ get_state <- function(hometown) {
 
 # Add state column to contestants data
 contestants <- contestants %>%
-  mutate(state = sapply(Hometown, get_state))
+  mutate(state = trimws(sapply(Hometown, get_state)))
 
 # Add state column to geocoded data
 bachelor_geocoded <- bachelor_geocoded %>%
-  mutate(state = sapply(city_state, get_state))
+  mutate(state = trimws(sapply(city_state, get_state)))
 
 bachelorette_geocoded <- bachelorette_geocoded %>%
-  mutate(state = sapply(city_state, get_state))
+  mutate(state = trimws(sapply(city_state, get_state)))
+
 
 # Get unique states for dropdowns
 bachelor_states <- sort(unique(bachelor_geocoded$state[!is.na(bachelor_geocoded$state)]))
@@ -71,23 +72,20 @@ server <- function(input, output, session) {
   })
   
 
-  # Create color palette function for Bachelor (red shades)
-  bachelor_color_pal <- function(avg_week) {
-    # Darker red for longer-lasting contestants
-    colorNumeric(
-      palette = c("#FFCCCB", "#FF6B6B", "#DC143C", "#8B0000"),
-      domain = c(1, 11)
-    )(avg_week)
-  }
+  # Create color palette for Bachelor (red shades)
+  bachelor_color_pal <- colorNumeric(
+    palette = c("#FFCCCB", "#FF6B6B", "#DC143C", "#8B0000"),
+    domain = c(1, 11)
+  )
   
-  # Create color palette function for Bachelorette (pink shades)
-  bachelorette_color_pal <- function(avg_week) {
-    # Darker pink for longer-lasting contestants
-    colorNumeric(
-      palette = c("#FFE4E1", "#FFB6C1", "#FF69B4", "#C71585"),
-      domain = c(1, 11)
-    )(avg_week)
-  }
+  
+  
+  # Create color palette for Bachelorette (pink shades)
+  bachelorette_color_pal <- colorNumeric(
+    palette = c("#FFE4E1", "#FFB6C1", "#FF69B4", "#C71585"),
+    domain = c(1, 11)
+  )
+  
   
   # Filtered Bachelor data based on state selection
   bachelor_filtered_data <- reactive({
@@ -118,6 +116,13 @@ server <- function(input, output, session) {
     data <- bachelor_filtered_data() %>% 
       filter(!is.na(latitude) & !is.na(longitude))
     
+    # Safety check - if no data, show empty map
+    if (nrow(data) == 0) {
+      return(leaflet() %>%
+               addTiles() %>%
+               setView(lng = -98.5795, lat = 39.8283, zoom = 4))
+    }
+    
     map <- leaflet(data) %>%
       addTiles() %>%
       addCircleMarkers(
@@ -134,15 +139,43 @@ server <- function(input, output, session) {
           "Average week eliminated: ", round(avg_week, 1), "<br>",
           "Longest lasting: Week ", max_week
         )
-      )   
+      )%>%
+      addLegend(
+        position = "topright",
+        pal = bachelor_color_pal,
+        values = ~avg_week,
+        title = "<strong style='font-size: 14px;'>Color Legend</strong><br><span style='font-size: 12px;'>Average Week Eliminated</span>",
+        opacity = 0.7,
+        labFormat = labelFormat(suffix = " weeks")
+      )%>%
+      addControl(
+        html = "<div style='background: white; padding: 10px; border-radius: 5px; border: 2px solid #8B0000;'>
+            <strong style='font-size: 14px; color: #DC143C;'>Circle Size</strong><br>
+            <span style='font-size: 12px;'>Larger = More Contestants</span><br>
+            <div style='margin-top: 8px;'>
+              <svg width='120' height='60'>
+                <circle cx='15' cy='45' r='5' fill='#DC143C' opacity='0.7' stroke='#8B0000' stroke-width='2'/>
+                <text x='25' y='50' font-size='11'>1-2 contestants</text>
+                <circle cx='15' cy='25' r='10' fill='#DC143C' opacity='0.7' stroke='#8B0000' stroke-width='2'/>
+                <text x='30' y='30' font-size='11'>4-6 contestants</text>
+                <circle cx='20' cy='8' r='15' fill='#DC143C' opacity='0.7' stroke='#8B0000' stroke-width='2'/>
+                <text x='40' y='13' font-size='11'>10+ contestants</text>
+              </svg>
+            </div>
+          </div>",
+        position = "topleft"
+      )
+    
+    
+    
     
     # Zoom to state or show full USA
-    if (input$bachelor_state != "all" && nrow(data) > 0) {
+    if (!is.null(input$bachelor_state) && input$bachelor_state != "all" && nrow(data) > 0) {
       map <- map %>% fitBounds(
-        lng1 = min(data$longitude) - 1,
-        lat1 = min(data$latitude) - 1,
-        lng2 = max(data$longitude) + 1,
-        lat2 = max(data$latitude) + 1
+        lng1 = min(data$longitude, na.rm = TRUE) - 1,
+        lat1 = min(data$latitude, na.rm = TRUE) - 1,
+        lng2 = max(data$longitude, na.rm = TRUE) + 1,
+        lat2 = max(data$latitude, na.rm = TRUE) + 1
       )
     } else {
       map <- map %>% setView(lng = -98.5795, lat = 39.8283, zoom = 4)
@@ -157,6 +190,12 @@ server <- function(input, output, session) {
     data <- bachelorette_filtered_data() %>% 
       filter(!is.na(latitude) & !is.na(longitude))
   
+    # Safety check - if no data, show empty map
+    if (nrow(data) == 0) {
+      return(leaflet() %>%
+               addTiles() %>%
+               setView(lng = -98.5795, lat = 39.8283, zoom = 4))
+    }
     
       map <- leaflet(data) %>%
       addTiles() %>%
@@ -174,16 +213,44 @@ server <- function(input, output, session) {
           "Average week eliminated: ", round(avg_week, 1), "<br>",
           "Longest lasting: Week ", max_week
         )
-      ) 
+        ) %>%
+        addLegend(
+          position = "topright",
+          pal = bachelorette_color_pal,
+          values = ~avg_week,
+          title = "<strong style='font-size: 14px;'>Color Legend</strong><br><span style='font-size: 12px;'>Average Week Eliminated</span>",
+          opacity = 0.7,
+          labFormat = labelFormat(suffix = " weeks")
+        ) %>%
+        addControl(
+          html = "<div style='background: white; padding: 10px; border-radius: 5px; border: 2px solid #C71585;'>
+            <strong style='font-size: 14px; color: #C71585;'>Circle Size</strong><br>
+            <span style='font-size: 12px;'>Larger = More Contestants</span><br>
+            <div style='margin-top: 8px;'>
+              <svg width='120' height='60'>
+                <circle cx='15' cy='45' r='5' fill='#FF69B4' opacity='0.7' stroke='#C71585' stroke-width='2'/>
+                <text x='25' y='50' font-size='11'>1-2 contestants</text>
+                <circle cx='15' cy='25' r='10' fill='#FF69B4' opacity='0.7' stroke='#C71585' stroke-width='2'/>
+                <text x='30' y='30' font-size='11'>4-6 contestants</text>
+                <circle cx='20' cy='8' r='15' fill='#FF69B4' opacity='0.7' stroke='#C71585' stroke-width='2'/>
+                <text x='40' y='13' font-size='11'>10+ contestants</text>
+              </svg>
+            </div>
+          </div>",
+          position = "topleft"
+        )
+      
+      
     
     # Zoom to state or show full USA
-    if (input$bachelorette_state != "all" && nrow(data) > 0) {
-      map <- map %>% fitBounds(
-        lng1 = min(data$longitude) - 1,
-        lat1 = min(data$latitude) - 1,
-        lng2 = max(data$longitude) + 1,
-        lat2 = max(data$latitude) + 1
-      )
+      if (!is.null(input$bachelorette_state) && input$bachelorette_state != "all" && nrow(data) > 0) {
+        map <- map %>% fitBounds(
+          lng1 = min(data$longitude, na.rm = TRUE) - 1,
+          lat1 = min(data$latitude, na.rm = TRUE) - 1,
+          lng2 = max(data$longitude, na.rm = TRUE) + 1,
+          lat2 = max(data$latitude, na.rm = TRUE) + 1
+        )
+        
     } else {
       map <- map %>% setView(lng = -98.5795, lat = 39.8283, zoom = 4)
     }
@@ -199,6 +266,40 @@ server <- function(input, output, session) {
     
     state_contestants <- contestants %>%
       filter(Show == "The Bachelor", state == input$bachelor_state) %>%
+      arrange(desc(Eliminated))
+    
+    if (nrow(state_contestants) == 0) {
+      return(p(paste0("No contestants found. State: '", input$bachelor_state,
+                      "'. Available: ",
+                      paste(head(unique(contestants$state[contestants$Show == "The Bachelor"]), 3), collapse=", ")),
+               style = "color: #888;"))
+    }
+    
+    contestant_items <- lapply(1:nrow(state_contestants), function(i) {
+      contestant <- state_contestants[i, ]
+      tags$div(
+        style = "border-bottom: 1px solid #ddd; padding: 10px 0;",
+        tags$strong(contestant$Name),
+        tags$br(),
+        tags$small(paste0("Hometown: ", contestant$Hometown)),
+        tags$br(),
+        tags$small(paste0("Eliminated: ", contestant$Eliminated)),
+        tags$br(),
+        tags$small(paste0("Job: ", contestant$Job))
+      )
+    })
+    
+    tags$div(contestant_items)
+  })
+  
+  # Display Bachelorette contestants list
+  output$bachelorette_contestants_list <- renderUI({
+    if (input$bachelorette_state == "all") {
+      return(p("Select a state to see contestants", style = "color: #888;"))
+    }
+    
+    state_contestants <- contestants %>%
+      filter(Show == "The Bachelorette", state == input$bachelorette_state) %>%
       arrange(desc(Eliminated))
     
     if (nrow(state_contestants) == 0) {
@@ -222,8 +323,6 @@ server <- function(input, output, session) {
     tags$div(contestant_items)
   })
   
- 
- 
   
 
 
@@ -252,6 +351,29 @@ server <- function(input, output, session) {
                            choices = states,
                            server = TRUE)
     })
+    
+    # Bachelor Map → Title Screen
+    observeEvent(input$bach_map_home, {
+      updateTabsetPanel(session, "tabs", selected = "Will you accept this rose?")
+    })
+    
+    # Bachelor Map → Data Analysis
+    observeEvent(input$bach_map_analysis, {
+      analysis_show("The Bachelor")
+      updateTabsetPanel(session, "tabs", selected = "Data Analysis")
+    })
+    
+    # Bachelorette Map → Title Screen
+    observeEvent(input$bach_ette_map_home, {
+      updateTabsetPanel(session, "tabs", selected = "Will you accept this rose?")
+    })
+    
+    # Bachelorette Map → Data Analysis
+    observeEvent(input$bach_ette_map_analysis, {
+      analysis_show("The Bachelorette")
+      updateTabsetPanel(session, "tabs", selected = "Data Analysis")
+    })
+    
     
     # Populate occupation dropdown based on gender selection
     observeEvent(input$survey_gender, {

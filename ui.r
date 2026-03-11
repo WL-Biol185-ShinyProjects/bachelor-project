@@ -133,7 +133,7 @@ ui <- fluidPage(
                
                # Sidebar on the right (25% width)
                tags$div(
-                 style = "width: 25%; height: 100%; background-color: #FFF5F5; padding: 20px; overflow-y: auto;",
+                 style = "width: 25%; height: 100%; background-color: #FFF5F5; padding: 20px; display: flex; flex-direction: column;",
                  
                  h3("Filter by State", style = "color: #DC143C; font-family: 'Lobster', cursive;"),
                  
@@ -145,7 +145,23 @@ ui <- fluidPage(
                  hr(),
                  
                  h4("Contestants", style = "color: #DC143C;"),
-                 uiOutput("bachelor_contestants_list")
+                 tags$div(
+                   style = "max-height: 500px; overflow-y: auto;",
+                   uiOutput("bachelor_contestants_list")
+                 ),
+                 
+                 tags$div(
+                   style = "display: flex; flex-direction: column; gap: 10px; padding-top: 15px; border-top: 1px solid #ddd; margin-top: 10px;",
+                   actionButton("bach_map_home", "Back to Title",
+                                style = "background-color: #8B0000; color: white; font-weight: bold;
+                        padding: 15px; font-size: 15px; border: none;
+                        font-family: 'Lobster', cursive; width: 100%;"),
+                   actionButton("bach_map_analysis", "Explore More Data",
+                                style = "background-color: white; color: #DC143C; font-weight: bold;
+                        padding: 15px; font-size: 15px; border: 2px solid #DC143C;
+                        font-family: 'Lobster', cursive; width: 100%;")
+                 
+                 )
                )
              )
     ),
@@ -163,7 +179,7 @@ ui <- fluidPage(
                
                # Sidebar on the right (25% width)
                tags$div(
-                 style = "width: 25%; height: 100%; background-color: #FFF0F5; padding: 20px; overflow-y: auto;",
+                 style = "width: 25%; height: 100%; background-color: #FFF0F5; padding: 20px; display: flex; flex-direction: column;",
                  
                  h3("Filter by State", style = "color: #C71585; font-family: 'Lobster', cursive;"),
                  
@@ -175,7 +191,22 @@ ui <- fluidPage(
                  hr(),
                  
                  h4("Contestants", style = "color: #C71585;"),
-                 uiOutput("bachelorette_contestants_list")
+                 tags$div(
+                   style = "max-height: 500px; overflow-y: auto;",
+                   uiOutput("bachelorette_contestants_list")
+                 ),
+                 
+                 tags$div(
+                   style = "display: flex; flex-direction: column; gap: 10px; padding-top: 15px; border-top: 1px solid #ddd; margin-top: 10px;",
+                   actionButton("bach_ette_map_home", "Back to Title",
+                                style = "background-color: #C71585; color: white; font-weight: bold;
+                        padding: 15px; font-size: 15px; border: none;
+                        font-family: 'Lobster', cursive; width: 100%;"),
+                   actionButton("bach_ette_map_analysis", "Explore More Data",
+                                style = "background-color: white; color: #C71585; font-weight: bold;
+                        padding: 15px; font-size: 15px; border: 2px solid #C71585;
+                        font-family: 'Lobster', cursive; width: 100%;")
+                 )
                )
              )
     ),
@@ -299,5 +330,5 @@ ui <- fluidPage(
              )
     )
   )
-  )
+)
 
