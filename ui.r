@@ -43,9 +43,51 @@ ui <- fluidPage(
         transition: opacity 0.3s;
       }
 
- .clickable-side:hover {
+.clickable-side:hover {
         opacity: 0.9;
       }
+
+      /* Tab styling */
+      .nav-tabs {
+        background-color: #FFE4E1;
+        border-bottom: none;
+        padding: 5px 10px;
+      }
+      
+      .nav-tabs > li > a {
+        font-family: 'Lobster', cursive;
+        font-size: 16px;
+        color: #D21A00 !important;
+        border: none !important;
+        background-color: transparent !important;
+        border-radius: 0 !important;
+      }
+      
+      .nav-tabs > li > a:hover {
+        color: white !important;
+        background-color: rgba(255,255,255,0.2) !important;
+        border: none !important;
+      }
+      
+      .nav-tabs > li.active > a,
+      .nav-tabs > li.active > a:hover,
+      .nav-tabs > li.active > a:focus {
+        font-family: 'Lobster', cursive;
+        color: #DC143C !important;
+        background-color: white !important;
+        border: none !important;
+        border-radius: 5px 5px 0 0 !important;
+      }
+      
+      .nav.nav-tabs {
+        border-bottom: 3px solid #8B0000;
+      }
+      
+      .tab-content {
+        height: 100vh;
+        overflow-y: auto;
+      }
+
     "))
   ),
 
@@ -277,7 +319,7 @@ ui <- fluidPage(
     # DATA ANALYSIS TAB
     tabPanel("Data Analysis",
              tags$div(
-               style = "height: 100vh; background-color: #FFF5F5; padding: 40px; overflow-y: auto;",
+               style = "min-height: 100vh; background-color: #FFF5F5; padding: 40px; overflow-y: auto;",
                
                h2("Contestant Performance Analysis", 
                   style = "text-align: center; color: #DC143C; font-family: 'Lobster', cursive; font-size: 48px; margin-bottom: 30px;"),
@@ -302,6 +344,19 @@ ui <- fluidPage(
                
                hr(),
                
+               # Success Rate Section
+               tags$div(
+                 style = "background-color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);",
+                 
+                 h3("Success Rate",
+                    style = "color: #DC143C; font-family: 'Lobster', cursive; font-size: 32px; margin-bottom: 20px;"),
+                 
+                 p("This chart shows what percentage of seasons ended in a proposal, and what percentage of couples are still together.",
+                   style = "color: #666; font-size: 16px; margin-bottom: 20px;"),
+                 
+                 plotOutput("success_rate_plot", height = "400px")
+               ),
+               
                # Age Analysis Section
                tags$div(
                  style = "background-color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);",
@@ -317,7 +372,7 @@ ui <- fluidPage(
                
                # Occupation Analysis Section
                tags$div(
-                 style = "background-color: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);",
+                 style = "background-color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);",
                  
                  h3("Top 15 Most Common Occupations", 
                     style = "color: #DC143C; font-family: 'Lobster', cursive; font-size: 32px; margin-bottom: 20px;"),

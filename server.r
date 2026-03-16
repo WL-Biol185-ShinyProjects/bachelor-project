@@ -10,6 +10,8 @@ bachelorette_geocoded <- read.csv("bachelorette_map_data.csv", stringsAsFactors 
 # Load the CSV files (load once when app starts)
 contestants <- read.csv("contestants.csv", stringsAsFactors = FALSE)
 seasons <- read.csv("seasons.csv", stringsAsFactors = FALSE)
+bachelorette_outcomes <- read.csv("The_Bachelorette_(American_TV_series)_1-1.csv", stringsAsFactors = FALSE)
+bachelor_outcomes <- read.csv("The_Bachelor_Success-1.csv", stringsAsFactors = FALSE)
 
 # Function to extract state from hometown
 get_state <- function(hometown) {
@@ -766,7 +768,65 @@ server <- function(input, output, session) {
       
     })
     
-    
+    output$success_rate_plot <- renderPlot({
+      
+      # Pick dataset based on selected show
+      is_bachelor <- analysis_show() == "The Bachelor"
+      outcomes_raw <- if (is_bachelor) bachelor_outcomes else bachelorette_outcomes
+      plot_color1 <- if (is_bachelor) "#FF6B6B" else "#FF69B4"
+      plot_color2 <- if (is_bachelor) "#DC143C" else "#C71585"
+      show_label <- if (is_bachelor) "Bachelor" else "Bachelorette"
+      
+      # Clean and prepare data
+      outcomes <- outcomes_raw %>%
+        mutate(
+          Proposal = trimws(Proposal),
+          Still_Together = trimws(`Still.together.`),
+          proposed = Proposal == "Yes",
+          still_together = Still_Together == "Yes"
+        ) %>%
+        filter(!is.na(Season), Season != "") %>%
+        group_by(Season) %>%
+        slice(1) %>%
+        ungroup()
+      
+      # Calculate percentages
+      total <- nrow(outcomes)
+      proposal_pct <- round(mean(outcomes$proposed, na.rm = TRUE) * 100)
+      together_pct <- round(mean(outcomes$still_together, na.rm = TRUE) * 100)
+      
+      # Build summary dataframe
+      summary_df <- data.frame(
+        Category = c("Proposal Made", "Still Together"),
+        Percentage = c(proposal_pct, together_pct)
+      )
+      
+      ggplot(summary_df, aes(x = Category, y = Percentage, fill = Category)) +
+        geom_bar(stat = "identity", width = 0.5, alpha = 0.85) +
+        geom_text(aes(label = paste0(Percentage, "%")),
+                  vjust = -0.5, size = 6, fontface = "bold", color = "#333") +
+        scale_fill_manual(values = c("Proposal Made" = plot_color1, "Still Together" = plot_color2)) +
+        scale_y_continuous(limits = c(0, 110), breaks = seq(0, 100, 20),
+                           labels = function(x) paste0(x, "%")) +
+        labs(
+          title = paste0(show_label, " Success Rate"),
+          subtitle = paste0("Based on ", total, " seasons"),
+          x = NULL,
+          y = "Percentage of Seasons"
+        ) +
+        theme_minimal() +
+        theme(
+          plot.title = element_text(size = 24, face = "bold", color = plot_color2,
+                                    hjust = 0.5),
+          plot.subtitle = element_text(size = 14, color = "#666", hjust = 0.5),
+          axis.text.x = element_text(size = 14, face = "bold", color = "#333"),
+          axis.text.y = element_text(size = 12),
+          axis.title.y = element_text(size = 14, face = "bold"),
+          legend.position = "none",
+          panel.grid.major.x = element_blank()
+        )
+    })
+
 }
 
 
