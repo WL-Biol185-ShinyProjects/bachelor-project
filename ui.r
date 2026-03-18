@@ -48,10 +48,15 @@ ui <- fluidPage(
       }
 
       /* Tab styling */
-      .nav-tabs {
+         .nav-tabs {
         background-color: #FFE4E1;
         border-bottom: none;
         padding: 5px 10px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
       }
       
       .nav-tabs > li > a {
@@ -83,9 +88,10 @@ ui <- fluidPage(
         border-bottom: 3px solid #8B0000;
       }
       
-      .tab-content {
-        height: 100vh;
+       .tab-content {
+        height: calc(100vh - 42px);
         overflow-y: auto;
+        margin-top: 42px;
       }
 
     "))
@@ -312,6 +318,22 @@ ui <- fluidPage(
                  
                  # Results Display
                  uiOutput("survey_results")
+               )
+             )
+    ),
+    
+    # ROSE GAME TAB
+    tabPanel("Rose Game",
+             tags$div(
+               style = "min-height: calc(100vh - 42px); background: linear-gradient(135deg, #D21A00 0%, #F8DEE7 100%);
+                        display: flex; justify-content: center; align-items: flex-start;
+                        padding: 40px 20px; overflow-y: auto;",
+               
+               tags$div(
+                 style = "background-color: white; padding: 40px; border-radius: 20px;
+                          box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 700px; width: 100%;",
+                 
+                 uiOutput("game_ui")
                )
              )
     ),

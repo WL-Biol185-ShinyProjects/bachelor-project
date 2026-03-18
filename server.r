@@ -12,6 +12,8 @@ contestants <- read.csv("contestants.csv", stringsAsFactors = FALSE)
 seasons <- read.csv("seasons.csv", stringsAsFactors = FALSE)
 bachelorette_outcomes <- read.csv("The_Bachelorette_(American_TV_series)_1-1.csv", stringsAsFactors = FALSE)
 bachelor_outcomes <- read.csv("The_Bachelor_Success-1.csv", stringsAsFactors = FALSE)
+quotes <- read.csv("bachelor_quotes.csv", stringsAsFactors = FALSE)
+quotes <- quotes %>% filter(!is.na(Classification) & Classification != "")
 
 # Function to extract state from hometown
 get_state <- function(hometown) {
@@ -825,6 +827,200 @@ server <- function(input, output, session) {
           legend.position = "none",
           panel.grid.major.x = element_blank()
         )
+    })
+    
+    # ========== QUOTE GAME LOGIC ==========
+    
+    game_state <- reactiveValues(
+      stage = "start",
+      score = 0,
+      round = 1,
+      max_rounds = 5,
+      funny_count = 0,
+      sassy_count = 0,
+      current_quotes = NULL,
+      correct_type = NULL
+    )
+    
+    # Render the game UI
+    output$game_ui <- renderUI({
+      
+      if (game_state$stage == "start") {
+        tags$div(
+          style = "text-align: center; padding: 40px;",
+          tags$img(src = "bachelor_rose.png", style = "width: 120px; margin-bottom: 20px; border-radius: 50%;"),
+          h3("Welcome to the Rose Game!", 
+             style = "font-family: 'Lobster', cursive; color: #DC143C; font-size: 40px;"),
+          p("You're a contestant on The Bachelor. Each round, you'll be given a quote to say on your date. Choose wisely — romantic quotes win roses, but sassy and funny ones might send you home!",
+            style = "font-size: 18px; color: #555; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.6;"),
+          actionButton("game_start", "Accept This Rose 🌹",
+                       style = "background-color: #DC143C; color: white; font-family: 'Lobster', cursive;
+                                font-size: 24px; padding: 15px 40px; border: none; border-radius: 10px;")
+        )
+        
+      } else if (game_state$stage == "playing") {
+        quotes_choices <- game_state$current_quotes
+        
+        tags$div(
+          style = "padding: 20px;",
+          
+          # Progress bar
+          tags$div(
+            style = "margin-bottom: 20px;",
+            tags$div(
+              style = paste0("background: linear-gradient(90deg, #DC143C ", 
+                             round((game_state$round - 1) / game_state$max_rounds * 100), 
+                             "%, #FFE4E1 0%); height: 12px; border-radius: 6px;")
+            ),
+            p(paste0("Date ", game_state$round, " of ", game_state$max_rounds, 
+                     " — Score: ", game_state$score),
+              style = "color: #DC143C; font-family: 'Lobster', cursive; font-size: 20px; margin-top: 8px;")
+          ),
+          
+          h3("You're on a date! Which quote do you use?",
+             style = "font-family: 'Lobster', cursive; color: #DC143C; font-size: 28px; margin-bottom: 20px;"),
+          
+          # Quote buttons
+          tags$div(
+            style = "display: flex; flex-direction: column; gap: 15px;",
+            lapply(1:nrow(quotes_choices), function(i) {
+              actionButton(
+                paste0("quote_choice_", i),
+                tags$div(
+                  tags$p(paste0('"', quotes_choices$Quote[i], '"'),
+                         style = "font-size: 16px; font-style: italic; margin: 0 0 5px 0;"),
+                  tags$small(paste0("— ", quotes_choices$Speaker[i]),
+                             style = "color: #888;")
+                ),
+                style = "background-color: white; color: #333; border: 2px solid #DC143C;
+                         padding: 15px 20px; text-align: left; width: 100%; border-radius: 10px;
+                         font-size: 15px; line-height: 1.4;"
+              )
+            })
+          )
+        )
+        
+      } else if (game_state$stage == "result") {
+        got_rose <- game_state$score >= 3
+        mostly_funny <- game_state$funny_count >= 3
+        mostly_sassy <- game_state$sassy_count >= 3
+        
+        # Determine outcome type
+        outcome_type <- if (got_rose) {
+          "winner"
+        } else if (mostly_funny) {
+          "funny"
+        } else if (mostly_sassy) {
+          "sassy"
+        } else {
+          "eliminated"
+        }
+        
+        result_color <- switch(outcome_type,
+                               "winner" = "#228B22",
+                               "funny" = "#FF8C00",
+                               "sassy" = "#8B008B",
+                               "eliminated" = "#DC143C"
+        )
+        result_bg <- switch(outcome_type,
+                            "winner" = "#E8F5E9",
+                            "funny" = "#FFF8E1",
+                            "sassy" = "#F3E5F5",
+                            "eliminated" = "#FFE4E1"
+        )
+        result_emoji <- switch(outcome_type,
+                               "winner" = "🌹",
+                               "funny" = "😂",
+                               "sassy" = "💅",
+                               "eliminated" = "💔"
+        )
+        result_title <- switch(outcome_type,
+                               "winner" = "You got the final rose!",
+                               "funny" = "No rose... but you're everyone's favorite!",
+                               "sassy" = "Eliminated, but iconic.",
+                               "eliminated" = "No rose for you..."
+        )
+        result_msg <- switch(outcome_type,
+                             "winner" = paste0("You scored ", game_state$score, " out of ", game_state$max_rounds, 
+                                               " — your romantic side won them over! 💍"),
+                             "funny" = paste0("You had the whole mansion laughing. You didn't get the rose, but America loves you. ",
+                                              "You might just be chosen as the next lead! 🎉"),
+                             "sassy" = paste0("You said what everyone was thinking. No rose, but you're the most memorable contestant ",
+                                              "this season — producers are already calling. 📱"),
+                             "eliminated" = paste0("You scored ", game_state$score, " out of ", game_state$max_rounds, 
+                                                   " — the connection just wasn't there. Maybe next season!")
+        )
+        
+        tags$div(
+          style = paste0("text-align: center; padding: 40px; background-color: ", result_bg, 
+                         "; border-radius: 15px;"),
+          tags$h1(result_emoji, style = "font-size: 80px; margin: 0;"),
+          h3(result_title,
+             style = paste0("font-family: 'Lobster', cursive; color: ", result_color, 
+                            "; font-size: 40px; margin: 20px 0 10px 0;")),
+          p(result_msg,
+            style = "font-size: 20px; color: #555; margin-bottom: 30px;"),
+          tags$div(
+            style = "display: flex; gap: 15px; justify-content: center;",
+            actionButton("game_restart", "Play Again 🌹",
+                         style = "background-color: #DC143C; color: white; font-family: 'Lobster', cursive;
+                                  font-size: 20px; padding: 12px 30px; border: none; border-radius: 10px;")
+          )
+        )
+      }
+    })
+    
+    # Start game
+    observeEvent(input$game_start, {
+      game_state$stage <- "playing"
+      game_state$score <- 0
+      game_state$round <- 1
+      
+      # Pick 3 random quotes (one romantic, one funny, one sassy)
+      romantic <- quotes %>% filter(Classification == "Romantic") %>% sample_n(1)
+      funny <- quotes %>% filter(Classification == "Funny") %>% sample_n(1)
+      sassy <- quotes %>% filter(Classification == "Sassy") %>% sample_n(1)
+      game_state$current_quotes <- rbind(romantic, funny, sassy)[sample(3), ]
+      game_state$correct_type <- "Romantic"
+    })
+    
+    # Handle quote choices
+    observe({
+      lapply(1:3, function(i) {
+        observeEvent(input[[paste0("quote_choice_", i)]], {
+          chosen <- game_state$current_quotes[i, ]
+          if (chosen$Classification == "Romantic") {
+            game_state$score <- game_state$score + 1
+          } else if (chosen$Classification == "Funny") {
+            game_state$funny_count <- game_state$funny_count + 1
+          } else if (chosen$Classification == "Sassy") {
+            game_state$sassy_count <- game_state$sassy_count + 1
+          }
+          if (game_state$round >= game_state$max_rounds) {
+            game_state$stage <- "result"
+          } else {
+            game_state$round <- game_state$round + 1
+            romantic <- quotes %>% filter(Classification == "Romantic") %>% sample_n(1)
+            funny <- quotes %>% filter(Classification == "Funny") %>% sample_n(1)
+            sassy <- quotes %>% filter(Classification == "Sassy") %>% sample_n(1)
+            game_state$current_quotes <- rbind(romantic, funny, sassy)[sample(3), ]
+          }
+        }, ignoreInit = TRUE)
+      })
+    })
+    
+    # Restart game
+    observeEvent(input$game_restart, {
+      game_state$stage <- "start"
+      game_state$score <- 0
+      game_state$round <- 1
+      game_state$funny_count <- 0
+      game_state$sassy_count <- 0
+    })
+    
+    # Game home button
+    observeEvent(input$game_home, {
+      updateTabsetPanel(session, "tabs", selected = "Will you accept this rose?")
     })
 
 }
