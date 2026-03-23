@@ -405,7 +405,98 @@ ui <- fluidPage(
                  plotOutput("occupation_performance_plot", height = "500px")
                )
              )
+    ),
+    
+    # ABOUT TAB
+    tabPanel("About",
+             tags$div(
+               style = "min-height: calc(100vh - 42px); background: linear-gradient(135deg, #D21A00 0%, #F8DEE7 100%);
+                        padding: 40px 20px; overflow-y: auto;",
+               
+               tags$div(
+                 style = "max-width: 900px; margin: 0 auto;",
+                 
+                 # Title
+                 h2("About This Project",
+                    style = "text-align: center; color: white; font-family: 'Lobster', cursive;
+                             font-size: 52px; margin-bottom: 10px;
+                             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);"),
+                 
+                 # Class info box
+                 tags$div(
+                   style = "background-color: white; border-radius: 15px; padding: 25px 35px;
+                            box-shadow: 0 6px 20px rgba(0,0,0,0.15); margin-bottom: 40px; text-align: center;",
+                   p("This app was created as a project for",
+                     tags$strong("BIOL-185"),
+                     "at",
+                     tags$strong("Washington & Lee University,"),
+                     "exploring data from The Bachelor and The Bachelorette through interactive maps,
+                      statistical analysis, and a little bit of fun.",
+                     style = "font-size: 18px; color: #444; line-height: 1.8; margin: 0;")
+                 ),
+                 
+                 h3("Meet the Creators",
+                    style = "text-align: center; color: white; font-family: 'Lobster', cursive;
+                             font-size: 40px; margin-bottom: 30px;
+                             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);"),
+                 
+                 # Three creator cards
+                 tags$div(
+                   style = "display: flex; gap: 25px; justify-content: center; flex-wrap: wrap;",
+                   
+                   # Abby
+                   tags$div(
+                     style = "background-color: white; border-radius: 15px; padding: 30px;
+                              box-shadow: 0 6px 20px rgba(0,0,0,0.15); width: 260px; text-align: center;",
+                     tags$img(src = "abby.jpeg",
+                              style = "width: 180px; height: 180px; object-fit: cover; object-position: top;
+                                       border-radius: 50%; border: 4px solid #DC143C; margin-bottom: 15px;"),
+                     h4("Abby Krouse", style = "color: #DC143C; font-family: 'Lobster', cursive;
+                                                font-size: 26px; margin: 0 0 5px 0;"),
+                     p("Junior", style = "color: #888; font-size: 14px; margin: 0 0 5px 0;"),
+                     p("Biology & Politics", style = "color: #555; font-weight: bold; font-size: 15px; margin: 0 0 15px 0;"),
+                     tags$hr(style = "border-color: #FFE4E1;"),
+                     p("🌹 Favorite Show:", style = "color: #888; font-size: 13px; margin: 10px 0 3px 0;"),
+                     p("Secret Lives of Mormon Wives", style = "color: #DC143C; font-style: italic;
+                                                                 font-size: 14px; margin: 0;")
+                   ),
+                   
+                   # Cecelia
+                   tags$div(
+                     style = "background-color: white; border-radius: 15px; padding: 30px;
+                              box-shadow: 0 6px 20px rgba(0,0,0,0.15); width: 260px; text-align: center;",
+                     tags$img(src = "cecelia.jpeg",
+                              style = "width: 180px; height: 180px; object-fit: cover; object-position: top;
+                                       border-radius: 50%; border: 4px solid #DC143C; margin-bottom: 15px;"),
+                     h4("Cecilia Hartford", style = "color: #DC143C; font-family: 'Lobster', cursive;
+                                                      font-size: 26px; margin: 0 0 5px 0;"),
+                     p("Sophomore", style = "color: #888; font-size: 14px; margin: 0 0 5px 0;"),
+                     p("Biology", style = "color: #555; font-weight: bold; font-size: 15px; margin: 0 0 15px 0;"),
+                     tags$hr(style = "border-color: #FFE4E1;"),
+                     p("🌹 Favorite Show:", style = "color: #888; font-size: 13px; margin: 10px 0 3px 0;"),
+                     p("Survivor", style = "color: #DC143C; font-style: italic; font-size: 14px; margin: 0;")
+                   ),
+                   
+                   # Caroline
+                   tags$div(
+                     style = "background-color: white; border-radius: 15px; padding: 30px;
+                              box-shadow: 0 6px 20px rgba(0,0,0,0.15); width: 260px; text-align: center;",
+                     tags$img(src = "caroline.jpeg",
+                              style = "width: 180px; height: 180px; object-fit: cover; object-position: top;
+                                       border-radius: 50%; border: 4px solid #DC143C; margin-bottom: 15px;"),
+                     h4("Caroline Natwick", style = "color: #DC143C; font-family: 'Lobster', cursive;
+                                                      font-size: 26px; margin: 0 0 5px 0;"),
+                     p("Senior", style = "color: #888; font-size: 14px; margin: 0 0 5px 0;"),
+                     p("Neuroscience", style = "color: #555; font-weight: bold; font-size: 15px; margin: 0 0 15px 0;"),
+                     tags$hr(style = "border-color: #FFE4E1;"),
+                     p("🌹 Favorite Show:", style = "color: #888; font-size: 13px; margin: 10px 0 3px 0;"),
+                     p("The Bachelor", style = "color: #DC143C; font-style: italic; font-size: 14px; margin: 0;")
+                   )
+                 )
+               )
+             )
     )
+    
   )
 )
 
