@@ -456,12 +456,24 @@ ui <- fluidPage(
                      p("Junior", style = "color: #888; font-size: 14px; margin: 0 0 5px 0;"),
                      p("Biology & Politics", style = "color: #555; font-weight: bold; font-size: 15px; margin: 0 0 15px 0;"),
                      tags$hr(style = "border-color: #FFE4E1;"),
-                     p("🌹 Favorite Show:", style = "color: #888; font-size: 13px; margin: 10px 0 3px 0;"),
+                     p("Favorite Reality Show:", style = "color: #888; font-size: 13px; margin: 10px 0 3px 0;"),
                      p("Secret Lives of Mormon Wives", style = "color: #DC143C; font-style: italic;
-                                                                 font-size: 14px; margin: 0;")
+                                                                 font-size: 14px; margin: 0;"),
+                     tags$hr(style = "border-color: #FFE4E1;"),
+                     tags$div(style = "text-align: left;",
+                              tags$small("Hometown: Indiana", style = "color: #666; display: block; margin-bottom: 4px;"),
+                              tags$small("Occupation: Student", style = "color: #666; display: block; margin-bottom: 4px;"),
+                              tags$small("Age: 21", style = "color: #666; display: block;")
+                     ),
+                     tags$hr(style = "border-color: #FFE4E1;"),
+                     tags$div(style = "text-align: center;",
+                              p("Quiz Results", style = "color: #888; font-size: 13px; font-weight: bold; margin: 8px 0 4px 0;"),
+                              p("15% chance of being cast", style = "color: #DC143C; font-size: 14px; font-style: italic; margin: 0 0 8px 0;"),
+                              p("Rose Game: Too funny for the final rose", style = "color: #FF8C00; font-size: 13px; font-style: italic; margin: 0;")
+                     )
                    ),
                    
-                   # Cecelia
+                   # Cecilia
                    tags$div(
                      style = "background-color: white; border-radius: 15px; padding: 30px;
                               box-shadow: 0 6px 20px rgba(0,0,0,0.15); width: 260px; text-align: center;",
@@ -473,8 +485,20 @@ ui <- fluidPage(
                      p("Sophomore", style = "color: #888; font-size: 14px; margin: 0 0 5px 0;"),
                      p("Biology", style = "color: #555; font-weight: bold; font-size: 15px; margin: 0 0 15px 0;"),
                      tags$hr(style = "border-color: #FFE4E1;"),
-                     p("🌹 Favorite Show:", style = "color: #888; font-size: 13px; margin: 10px 0 3px 0;"),
-                     p("Survivor", style = "color: #DC143C; font-style: italic; font-size: 14px; margin: 0;")
+                     p("Favorite Reality Show:", style = "color: #888; font-size: 13px; margin: 10px 0 3px 0;"),
+                     p("Survivor", style = "color: #DC143C; font-style: italic; font-size: 14px; margin: 0;"),
+                     tags$hr(style = "border-color: #FFE4E1;"),
+                     tags$div(style = "text-align: left;",
+                              tags$small("Hometown: Maryland", style = "color: #666; display: block; margin-bottom: 4px;"),
+                              tags$small("Occupation: Student", style = "color: #666; display: block; margin-bottom: 4px;"),
+                              tags$small("Age: 19", style = "color: #666; display: block;")
+                     ),
+                     tags$hr(style = "border-color: #FFE4E1;"),
+                     tags$div(style = "text-align: center;",
+                              p("Quiz Results", style = "color: #888; font-size: 13px; font-weight: bold; margin: 8px 0 4px 0;"),
+                              p("15% chance of being cast", style = "color: #DC143C; font-size: 14px; font-style: italic; margin: 0 0 8px 0;"),
+                              p("Rose Game: Too funny for the final rose", style = "color: #FF8C00; font-size: 13px; font-style: italic; margin: 0;")
+                     )
                    ),
                    
                    # Caroline
@@ -489,8 +513,20 @@ ui <- fluidPage(
                      p("Senior", style = "color: #888; font-size: 14px; margin: 0 0 5px 0;"),
                      p("Neuroscience", style = "color: #555; font-weight: bold; font-size: 15px; margin: 0 0 15px 0;"),
                      tags$hr(style = "border-color: #FFE4E1;"),
-                     p("🌹 Favorite Show:", style = "color: #888; font-size: 13px; margin: 10px 0 3px 0;"),
-                     p("The Bachelor", style = "color: #DC143C; font-style: italic; font-size: 14px; margin: 0;")
+                     p("Favorite Reality Show:", style = "color: #888; font-size: 13px; margin: 10px 0 3px 0;"),
+                     p("The Bachelor", style = "color: #DC143C; font-style: italic; font-size: 14px; margin: 0;"),
+                     tags$hr(style = "border-color: #FFE4E1;"),
+                     tags$div(style = "text-align: left;",
+                              tags$small("Hometown: North Carolina", style = "color: #666; display: block; margin-bottom: 4px;"),
+                              tags$small("Occupation: Student", style = "color: #666; display: block; margin-bottom: 4px;"),
+                              tags$small("Age: 22", style = "color: #666; display: block;")
+                     ),
+                     tags$hr(style = "border-color: #FFE4E1;"),
+                     tags$div(style = "text-align: center;",
+                              p("Quiz Results", style = "color: #888; font-size: 13px; font-weight: bold; margin: 8px 0 4px 0;"),
+                              p("19% chance of being cast", style = "color: #DC143C; font-size: 14px; font-style: italic; margin: 0 0 8px 0;"),
+                              p("Rose Game: Got the final rose — perfect, amazing, and absolutely destined for love!", style = "color: #228B22; font-size: 13px; font-style: italic; margin: 0;")
+                     )
                    )
                  )
                )
