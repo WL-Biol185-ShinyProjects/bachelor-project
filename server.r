@@ -2,6 +2,7 @@ library(shiny)
 library(ggplot2)
 library(tidyverse)
 library(leaflet)
+library(maps)
 
 # Load pre-geocoded data (loads instantly!)
 bachelor_geocoded <- read.csv("bachelor_map_data.csv", stringsAsFactors = FALSE)
@@ -13,6 +14,8 @@ seasons <- read.csv("seasons.csv", stringsAsFactors = FALSE)
 bachelorette_outcomes <- read.csv("The_Bachelorette_(American_TV_series)_1-1.csv", stringsAsFactors = FALSE)
 bachelor_outcomes <- read.csv("The_Bachelor_Success-1.csv", stringsAsFactors = FALSE)
 quotes <- read.csv("bachelor_quotes_withshows.csv", stringsAsFactors = FALSE)
+bachelor_culture <- read.csv("Bachelor_Culture.csv", stringsAsFactors = FALSE)
+bachelorette_culture <- read.csv("Bachelorette_Culture.csv", stringsAsFactors = FALSE)
 quotes <- quotes %>% 
   filter(!is.na(Classification) & Classification != "") %>%
   mutate(Week = as.numeric(trimws(Week)))
@@ -364,10 +367,10 @@ server <- function(input, output, session) {
       updateTabsetPanel(session, "tabs", selected = "Will you accept this rose?")
     })
     
-    # Bachelor Map → Data Analysis
+    # Bachelor Map → Performance Analysis
     observeEvent(input$bach_map_analysis, {
       analysis_show("The Bachelor")
-      updateTabsetPanel(session, "tabs", selected = "Data Analysis")
+      updateTabsetPanel(session, "tabs", selected = "Performance Analysis")
     })
     
     # Bachelorette Map → Title Screen
@@ -375,10 +378,10 @@ server <- function(input, output, session) {
       updateTabsetPanel(session, "tabs", selected = "Will you accept this rose?")
     })
     
-    # Bachelorette Map → Data Analysis
+    # Bachelorette Map → Performance Analysis
     observeEvent(input$bach_ette_map_analysis, {
       analysis_show("The Bachelorette")
-      updateTabsetPanel(session, "tabs", selected = "Data Analysis")
+      updateTabsetPanel(session, "tabs", selected = "Performance Analysis")
     })
     
     
@@ -651,7 +654,7 @@ server <- function(input, output, session) {
       output$survey_results <- renderUI({})
     })
     
-    # ========== DATA ANALYSIS LOGIC ==========
+    # ========== PERFORMANCE ANALYSIS LOGIC ==========
     
     # Reactive value to store which show is selected for analysis
     analysis_show <- reactiveVal("The Bachelor")
@@ -830,6 +833,207 @@ server <- function(input, output, session) {
           legend.position = "none",
           panel.grid.major.x = element_blank()
         )
+    })
+    
+    # ========== CULTURE ANALYSIS LOGIC ==========
+    
+    culture_show <- reactiveVal("The Bachelor")
+    
+    observeEvent(input$culture_bachelor, {
+      culture_show("The Bachelor")
+    })
+    
+    observeEvent(input$culture_bachelorette, {
+      culture_show("The Bachelorette")
+    })
+    
+    output$culture_selection <- renderUI({
+      show_color <- if (culture_show() == "The Bachelor") "#D21A00" else "#F8DEE7"
+      text_color <- if (culture_show() == "The Bachelor") "white" else "#DC143C"
+      tags$div(
+        style = paste0("text-align: center; padding: 15px; background-color: ", show_color,
+                       "; border-radius: 10px; margin-bottom: 20px;"),
+        h4(paste0("Currently Viewing: ", culture_show()),
+           style = paste0("color: ", text_color, "; font-family: 'Lobster', cursive; margin: 0;"))
+      )
+    })
+    
+    # Helper to get current culture data (excluding Total row)
+    culture_data <- reactive({
+      df <- if (culture_show() == "The Bachelor") bachelor_culture else bachelorette_culture
+      df %>% filter(Culture != "Total")
+    })
+    
+    # Three pie charts for relationship outcomes
+    output$culture_pie_immediate <- renderPlot({
+      df <- culture_data()
+      plot_colors <- c("#FFCCCB", "#FF6B6B", "#DC143C", "#8B0000", "#5C0000", "#FFB6C1")
+      
+      df <- df %>% filter(Percent.of.Relationships.Lasting.0.Months > 0)
+      ggplot(df, aes(x = "", y = Percent.of.Relationships.Lasting.0.Months, fill = Culture)) +
+        geom_bar(stat = "identity", width = 1, color = "white", linewidth = 0.5) +
+        coord_polar("y") +
+        scale_fill_manual(values = plot_colors) +
+        geom_text(aes(label = paste0(Percent.of.Relationships.Lasting.0.Months, "%")),
+                  position = position_stack(vjust = 0.5),
+                  size = 3.5, color = "white", fontface = "bold") +
+        labs(title = "Ended Immediately", fill = "Region") +
+        theme_void() +
+        theme(
+          plot.title       = element_text(size = 16, face = "bold", color = "#DC143C", hjust = 0.5, margin = margin(b = 10)),
+          legend.position  = "right",
+          legend.title     = element_text(size = 12, face = "bold"),
+          legend.text      = element_text(size = 11),
+          legend.key.size  = unit(1, "cm")
+        )
+    })
+    
+    output$culture_pie_short <- renderPlot({
+      df <- culture_data()
+      plot_colors <- c("#FFCCCB", "#FF6B6B", "#DC143C", "#8B0000", "#5C0000", "#FFB6C1")
+      
+      df <- df %>% filter(Percentage.of.Relationships.0.12.Months > 0)
+      ggplot(df, aes(x = "", y = Percentage.of.Relationships.0.12.Months, fill = Culture)) +
+        geom_bar(stat = "identity", width = 1, color = "white", linewidth = 0.5) +
+        coord_polar("y") +
+        scale_fill_manual(values = plot_colors) +
+        geom_text(aes(label = paste0(Percentage.of.Relationships.0.12.Months, "%")),
+                  position = position_stack(vjust = 0.5),
+                  size = 3.5, color = "white", fontface = "bold") +
+        labs(title = "Lasted 0–12 Months", fill = "Region") +
+        theme_void() +
+        theme(
+          plot.title       = element_text(size = 16, face = "bold", color = "#DC143C", hjust = 0.5, margin = margin(b = 10)),
+          legend.position  = "right",
+          legend.title     = element_text(size = 12, face = "bold"),
+          legend.text      = element_text(size = 11),
+          legend.key.size  = unit(1, "cm")
+        )
+    })
+    
+    output$culture_pie_long <- renderPlot({
+      df <- culture_data()
+      plot_colors <- c("#FFCCCB", "#FF6B6B", "#DC143C", "#8B0000", "#5C0000", "#FFB6C1")
+      
+      df <- df %>% filter(Percentage.of.Relationships.Greater.Than.12.Months > 0)
+      ggplot(df, aes(x = "", y = Percentage.of.Relationships.Greater.Than.12.Months, fill = Culture)) +
+        geom_bar(stat = "identity", width = 1, color = "white", linewidth = 0.5) +
+        coord_polar("y") +
+        scale_fill_manual(values = plot_colors) +
+        geom_text(aes(label = paste0(Percentage.of.Relationships.Greater.Than.12.Months, "%")),
+                  position = position_stack(vjust = 0.5),
+                  size = 3.5, color = "white", fontface = "bold") +
+        labs(title = "Lasted 12+ Months", fill = "Region") +
+        theme_void() +
+        theme(
+          plot.title       = element_text(size = 16, face = "bold", color = "#DC143C", hjust = 0.5, margin = margin(b = 10)),
+          legend.position  = "right",
+          legend.title     = element_text(size = 12, face = "bold"),
+          legend.text      = element_text(size = 11),
+          legend.key.size  = unit(1, "cm")
+        )
+    })
+    
+    # Age display as map with floating cards
+    output$culture_age_cards <- renderUI({
+      df <- culture_data()
+      is_bachelor  <- culture_show() == "The Bachelor"
+      age_col      <- if (is_bachelor) "Mean.Age.of.Female" else "Mean.Age.of.Male"
+      age_label    <- if (is_bachelor) "Mean Female Age" else "Mean Male Age"
+      
+      tags$div(
+        tags$p(paste0(age_label, " by Cultural Region"),
+               style = "text-align: left; color: #666; font-size: 15px;
+                    margin-bottom: 10px; font-style: italic;"),
+        plotOutput("culture_age_map", width = "100%", height = "580px")
+      )
+    })
+    
+    output$culture_age_map <- renderPlot({
+      df <- culture_data()
+      is_bachelor  <- culture_show() == "The Bachelor"
+      age_col      <- if (is_bachelor) "Mean.Age.of.Female" else "Mean.Age.of.Male"
+      accent_color <- if (is_bachelor) "#DC143C" else "#C71585"
+      
+      df_clean <- df %>% filter(!is.na(.data[[age_col]]))
+      
+      # Region anchor points (where line touches the map)
+      region_anchors <- data.frame(
+        Culture  = c("Africa", "East Asia", "Eastern Europe", "North America", "Oceania", "Western Europe"),
+        map_x    = c(  20,       110,          30,               -100,            140,        10),
+        map_y    = c(   5,        35,          55,                 45,            -25,        50)
+      )
+      
+      # Label positions (where the box will sit)
+      region_labels <- data.frame(
+        Culture  = c("Africa", "East Asia", "Eastern Europe", "North America", "Oceania", "Western Europe"),
+        label_x  = c(  20,       155,          55,              -140,            165,       -30),
+        label_y  = c( -25,        60,          75,                55,            -45,        70)
+      )
+      
+      plot_df <- df_clean %>%
+        left_join(region_anchors, by = "Culture") %>%
+        left_join(region_labels,  by = "Culture") %>%
+        mutate(age_val = round(.data[[age_col]], 1),
+               label   = paste0(Culture, "\n", age_val, " yrs old"))
+      
+      world <- map_data("world")
+      
+      ggplot() +
+        geom_polygon(data = world, aes(x = long, y = lat, group = group),
+                     fill = "#f0e6e6", color = "#ccc", linewidth = 0.2) +
+        # Lines from label to map anchor
+        geom_segment(data = plot_df,
+                     aes(x = label_x, y = label_y, xend = map_x, yend = map_y),
+                     color = accent_color, linewidth = 0.6, linetype = "solid") +
+        # Dot on map anchor
+        geom_point(data = plot_df,
+                   aes(x = map_x, y = map_y),
+                   color = accent_color, size = 3) +
+        # Label boxes
+        geom_label(data = plot_df,
+                   aes(x = label_x, y = label_y, label = label),
+                   fill = "white", color = accent_color,
+                   fontface = "bold", size = 3.8,
+                   label.padding = unit(0.4, "lines"),
+                   label.r = unit(0.3, "lines"),
+                   label.size = 0.6) +
+        coord_fixed(1.3, xlim = c(-170, 180), ylim = c(-55, 80)) +
+        theme_void() +
+        theme(
+          panel.background = element_rect(fill = "#e8f4f8", color = NA),
+          plot.background  = element_rect(fill = "#e8f4f8", color = NA)
+        )
+    })
+    
+    # Wedding rate plot
+    output$culture_wedding_plot <- renderPlot({
+      df <- culture_data()
+      plot_color <- if (culture_show() == "The Bachelor") "#DC143C" else "#C71585"
+      
+      # Clean percentage column (remove % sign if present)
+      df <- df %>%
+        mutate(wedding_pct = as.numeric(gsub("%", "", `Percentage.of.Weddings`)))
+      
+      ggplot(df, aes(x = reorder(Culture, wedding_pct), y = wedding_pct)) +
+        geom_bar(stat = "identity", fill = plot_color, alpha = 0.85, width = 0.6) +
+        geom_text(aes(label = paste0(wedding_pct, "%")),
+                  hjust = -0.2, size = 4, color = "#333") +
+        coord_flip() +
+        labs(
+          title = paste0(culture_show(), ": Wedding Rate by Region"),
+          subtitle = "Percentage of seasons that ended in marriage",
+          x = "Region", y = "Wedding Rate (%)"
+        ) +
+        theme_minimal() +
+        theme(
+          plot.title    = element_text(size = 18, face = "bold", color = "#DC143C"),
+          plot.subtitle = element_text(size = 12, color = "#666"),
+          axis.title    = element_text(size = 13, face = "bold"),
+          axis.text.y   = element_text(size = 12),
+          axis.text.x   = element_text(size = 11)
+        ) +
+        scale_y_continuous(limits = c(0, max(df$wedding_pct, na.rm = TRUE) + 8))
     })
     
     # ========== QUOTE GAME LOGIC ==========

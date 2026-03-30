@@ -345,8 +345,8 @@ ui <- fluidPage(
              )
     ),
     
-    # DATA ANALYSIS TAB
-    tabPanel("Data Analysis",
+    # CONTESTANT PERFORMANCE ANALYSIS TAB
+    tabPanel("Performance Analysis",
              tags$div(
                style = "min-height: 100vh; background-color: #FFF5F5; padding: 40px; overflow-y: auto;",
                
@@ -410,6 +410,73 @@ ui <- fluidPage(
                    style = "color: #666; font-size: 16px; margin-bottom: 20px;"),
                  
                  plotOutput("occupation_performance_plot", height = "500px")
+               )
+             )
+    ),
+    
+    # REGIONAL ANALYSIS TAB
+    tabPanel("Regional Analysis",
+             tags$div(
+               style = "min-height: 100vh; background-color: #FFF5F5; padding: 40px; overflow-y: auto;",
+               
+               h2("Regions & The Bachelor Universe",
+                  style = "text-align: center; color: #DC143C; font-family: 'Lobster', cursive; font-size: 48px; margin-bottom: 30px;"),
+               
+               # Toggle buttons
+               tags$div(
+                 style = "text-align: center; margin-bottom: 40px;",
+                 actionButton("culture_bachelor",
+                              "Bachelor Data",
+                              class = "btn-lg",
+                              style = "background-color: #D21A00; color: white; font-weight: bold;
+                                       padding: 15px 40px; font-size: 20px; margin: 10px; border: none;
+                                       font-family: 'Lobster', cursive;"),
+                 actionButton("culture_bachelorette",
+                              "Bachelorette Data",
+                              class = "btn-lg",
+                              style = "background-color: #F8DEE7; color: #DC143C; font-weight: bold;
+                                       padding: 15px 40px; font-size: 20px; margin: 10px;
+                                       border: 2px solid #DC143C; font-family: 'Lobster', cursive;")
+               ),
+               
+               uiOutput("culture_selection"),
+               
+               hr(),
+               
+               # Three Pie Charts
+               tags$div(
+                 style = "background-color: white; padding: 30px; border-radius: 15px;
+                          margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);",
+                 h3("Relationship Outcomes by Region",
+                    style = "color: #DC143C; font-family: 'Lobster', cursive; font-size: 32px; margin-bottom: 10px;"),
+                 p("What share of each cultural region falls into each relationship outcome?",
+                   style = "color: #666; font-size: 16px; margin-bottom: 20px;"),
+                 tags$div(
+                   style = "display: flex; gap: 40px; justify-content: space-between; flex-wrap: wrap;",
+                   tags$div(style = "flex: 1; min-width: 320px;", plotOutput("culture_pie_immediate", height = "420px")),
+                   tags$div(style = "flex: 1; min-width: 320px;", plotOutput("culture_pie_short",     height = "420px")),
+                   tags$div(style = "flex: 1; min-width: 320px;", plotOutput("culture_pie_long",      height = "420px"))
+                 )
+               ),
+               
+               # Age as Numbers
+               tags$div(
+                 style = "background-color: white; padding: 30px; border-radius: 15px;
+                          margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);",
+                 h3("Mean Ages by Region",
+                    style = "color: #DC143C; font-family: 'Lobster', cursive; font-size: 32px; margin-bottom: 10px;"),
+                 uiOutput("culture_age_cards")
+               ),
+               
+               # Wedding Rate
+               tags$div(
+                 style = "background-color: white; padding: 30px; border-radius: 15px;
+                          margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);",
+                 h3("Wedding Rate by Region",
+                    style = "color: #DC143C; font-family: 'Lobster', cursive; font-size: 32px; margin-bottom: 10px;"),
+                 p("Which cultural regions had the highest rates of marriage after the show?",
+                   style = "color: #666; font-size: 16px; margin-bottom: 20px;"),
+                 plotOutput("culture_wedding_plot", height = "380px")
                )
              )
     ),
