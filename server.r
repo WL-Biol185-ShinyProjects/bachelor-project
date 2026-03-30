@@ -12,7 +12,10 @@ contestants <- read.csv("contestants.csv", stringsAsFactors = FALSE)
 seasons <- read.csv("seasons.csv", stringsAsFactors = FALSE)
 bachelorette_outcomes <- read.csv("The_Bachelorette_(American_TV_series)_1-1.csv", stringsAsFactors = FALSE)
 bachelor_outcomes <- read.csv("The_Bachelor_Success-1.csv", stringsAsFactors = FALSE)
-quotes <- read.csv("bachelor_quotes.csv", stringsAsFactors = FALSE)
+quotes <- read.csv("bachelor_quotes_withshows.csv", stringsAsFactors = FALSE)
+quotes <- quotes %>% 
+  filter(!is.na(Classification) & Classification != "") %>%
+  mutate(Week = as.numeric(trimws(Week)))
 quotes <- quotes %>% filter(!is.na(Classification) & Classification != "")
 
 # Function to extract state from hometown
@@ -838,6 +841,7 @@ server <- function(input, output, session) {
       max_rounds = 5,
       funny_count = 0,
       sassy_count = 0,
+      gender = NULL,
       current_quotes = NULL,
       correct_type = NULL
     )
@@ -849,13 +853,24 @@ server <- function(input, output, session) {
         tags$div(
           style = "text-align: center; padding: 40px;",
           tags$img(src = "bachelor_rose.png", style = "width: 120px; margin-bottom: 20px; border-radius: 50%;"),
-          h3("Welcome to the Rose Game!", 
+          h3("Welcome to the Rose Game!",
              style = "font-family: 'Lobster', cursive; color: #DC143C; font-size: 40px;"),
-          p("You're a contestant on The Bachelor. Each round, you'll be given a quote to say on your date. Choose wisely — romantic quotes win roses, but sassy and funny ones might send you home!",
-            style = "font-size: 18px; color: #555; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.6;"),
-          actionButton("game_start", "Accept This Rose 🌹",
-                       style = "background-color: #DC143C; color: white; font-family: 'Lobster', cursive;
-                                font-size: 24px; padding: 15px 40px; border: none; border-radius: 10px;")
+          p("You're a contestant on The Bachelor or Bachelorette. Each round, choose a quote to say on your date. Romantic quotes win roses — but sassy and funny ones might send you home!",
+            style = "font-size: 18px; color: #555; max-width: 600px; margin: 0 auto 20px auto; line-height: 1.6;"),
+          
+          p("First, who are you?", style = "font-size: 20px; font-weight: bold; color: #DC143C; margin-bottom: 15px;"),
+          
+          tags$div(
+            style = "display: flex; gap: 20px; justify-content: center; margin-bottom: 30px;",
+            actionButton("game_gender_female", "I am a Woman",
+                         style = "background-color: #F8DEE7; color: #DC143C; font-family: 'Lobster', cursive;
+                                  font-size: 20px; padding: 12px 30px; border: 2px solid #DC143C; border-radius: 10px;"),
+            actionButton("game_gender_male", "I am a Man",
+                         style = "background-color: #D21A00; color: white; font-family: 'Lobster', cursive;
+                                  font-size: 20px; padding: 12px 30px; border: none; border-radius: 10px;")
+          ),
+          
+          uiOutput("game_start_btn")
         )
         
       } else if (game_state$stage == "playing") {
@@ -904,6 +919,23 @@ server <- function(input, output, session) {
         got_rose <- game_state$score >= 3
         mostly_funny <- game_state$funny_count >= 3
         mostly_sassy <- game_state$sassy_count >= 3
+        
+        # Calculate predicted week based on quote types chosen
+        show_filter <- if (!is.null(game_state$gender) && game_state$gender == "female") c("The Bachelor", "Both") else c("The Bachelorette", "Both")
+        show_quotes <- quotes %>% filter(Show %in% show_filter)
+        
+        romantic_avg_week <- mean(show_quotes$Week[show_quotes$Classification == "Romantic"], na.rm = TRUE)
+        funny_avg_week <- mean(show_quotes$Week[show_quotes$Classification == "Funny"], na.rm = TRUE)
+        sassy_avg_week <- mean(show_quotes$Week[show_quotes$Classification == "Sassy"], na.rm = TRUE)
+        
+        predicted_week <- round(
+          (game_state$score * romantic_avg_week +
+             game_state$funny_count * funny_avg_week +
+             game_state$sassy_count * sassy_avg_week) / game_state$max_rounds, 1
+        )
+        if (is.na(predicted_week)) predicted_week <- 1
+        week_pct <- round((predicted_week / 11) * 100)
+        show_name <- if (!is.null(game_state$gender) && game_state$gender == "female") "The Bachelor" else "The Bachelorette"
         
         # Determine outcome type
         outcome_type <- if (got_rose) {
@@ -959,10 +991,20 @@ server <- function(input, output, session) {
              style = paste0("font-family: 'Lobster', cursive; color: ", result_color, 
                             "; font-size: 40px; margin: 20px 0 10px 0;")),
           p(result_msg,
-            style = "font-size: 20px; color: #555; margin-bottom: 30px;"),
+            style = "font-size: 20px; color: #555; margin-bottom: 20px;"),
+          
+          tags$div(
+            style = "background: linear-gradient(135deg, #FFE4E1, #FFF0F5); padding: 15px 30px;
+                     border-radius: 10px; margin: 0 auto 25px auto; max-width: 300px;",
+            p(paste0("You would have lasted ", predicted_week, " weeks on ", show_name),
+              style = "font-size: 16px; color: #555; margin: 0 0 5px 0;"),
+            h3(paste0(week_pct, "% of the season"),
+               style = "font-family: 'Lobster', cursive; color: #DC143C; font-size: 32px; margin: 0;")
+          ),
+          
           tags$div(
             style = "display: flex; gap: 15px; justify-content: center;",
-            actionButton("game_restart", "Play Again 🌹",
+            actionButton("game_restart", "Play Again",
                          style = "background-color: #DC143C; color: white; font-family: 'Lobster', cursive;
                                   font-size: 20px; padding: 12px 30px; border: none; border-radius: 10px;")
           )
@@ -970,16 +1012,43 @@ server <- function(input, output, session) {
       }
     })
     
+    # Gender selection
+    output$game_start_btn <- renderUI({
+      if (!is.null(game_state$gender)) {
+        tags$div(
+          p(paste0("Playing as: ", if (game_state$gender == "female") "A Woman (The Bachelor)" else "A Man (The Bachelorette)"),
+            style = "color: #228B22; font-size: 16px; margin-bottom: 15px; font-weight: bold;"),
+          actionButton("game_start", "Accept This Rose",
+                       style = "background-color: #DC143C; color: white; font-family: 'Lobster', cursive;
+                                font-size: 24px; padding: 15px 40px; border: none; border-radius: 10px;")
+        )
+      }
+    })
+    
+    observeEvent(input$game_gender_female, {
+      game_state$gender <- "female"
+    })
+    
+    observeEvent(input$game_gender_male, {
+      game_state$gender <- "male"
+    })
+    
     # Start game
     observeEvent(input$game_start, {
+      req(game_state$gender)
       game_state$stage <- "playing"
       game_state$score <- 0
       game_state$round <- 1
+      game_state$funny_count <- 0
+      game_state$sassy_count <- 0
       
-      # Pick 3 random quotes (one romantic, one funny, one sassy)
-      romantic <- quotes %>% filter(Classification == "Romantic") %>% sample_n(1)
-      funny <- quotes %>% filter(Classification == "Funny") %>% sample_n(1)
-      sassy <- quotes %>% filter(Classification == "Sassy") %>% sample_n(1)
+      # Filter quotes by show based on gender
+      show_filter <- if (game_state$gender == "female") c("The Bachelor", "Both") else c("The Bachelorette", "Both")
+      show_quotes <- quotes %>% filter(Show %in% show_filter)
+      
+      romantic <- show_quotes %>% filter(Classification == "Romantic") %>% sample_n(1)
+      funny <- show_quotes %>% filter(Classification == "Funny") %>% sample_n(1)
+      sassy <- show_quotes %>% filter(Classification == "Sassy") %>% sample_n(1)
       game_state$current_quotes <- rbind(romantic, funny, sassy)[sample(3), ]
       game_state$correct_type <- "Romantic"
     })
@@ -1000,9 +1069,11 @@ server <- function(input, output, session) {
             game_state$stage <- "result"
           } else {
             game_state$round <- game_state$round + 1
-            romantic <- quotes %>% filter(Classification == "Romantic") %>% sample_n(1)
-            funny <- quotes %>% filter(Classification == "Funny") %>% sample_n(1)
-            sassy <- quotes %>% filter(Classification == "Sassy") %>% sample_n(1)
+            show_filter <- if (game_state$gender == "female") c("The Bachelor", "Both") else c("The Bachelorette", "Both")
+            show_quotes <- quotes %>% filter(Show %in% show_filter)
+            romantic <- show_quotes %>% filter(Classification == "Romantic") %>% sample_n(1)
+            funny <- show_quotes %>% filter(Classification == "Funny") %>% sample_n(1)
+            sassy <- show_quotes %>% filter(Classification == "Sassy") %>% sample_n(1)
             game_state$current_quotes <- rbind(romantic, funny, sassy)[sample(3), ]
           }
         }, ignoreInit = TRUE)
@@ -1016,6 +1087,7 @@ server <- function(input, output, session) {
       game_state$round <- 1
       game_state$funny_count <- 0
       game_state$sassy_count <- 0
+      game_state$gender <- NULL
     })
     
     # Game home button
