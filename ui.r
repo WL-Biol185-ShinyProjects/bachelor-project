@@ -93,6 +93,10 @@ ui <- fluidPage(
         overflow-y: auto;
         margin-top: 42px;
       }
+      
+      .leaflet-tile-pane {
+        filter: grayscale(100%);
+      }
 
     "))
   ),
@@ -176,7 +180,10 @@ ui <- fluidPage(
                # Map on the left (75% width)
                tags$div(
                  style = "width: 75%; height: 100%;",
-                 leafletOutput("bachelor_map", width = "100%", height = "100%")
+                 tags$div(
+                   style = "width: 100%; height: 100%; filter: none;",
+                   leafletOutput("bachelor_map", width = "100%", height = "100%")
+                 )
                ),
                
                # Sidebar on the right (25% width)

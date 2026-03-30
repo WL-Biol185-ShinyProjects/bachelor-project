@@ -843,7 +843,8 @@ server <- function(input, output, session) {
       sassy_count = 0,
       gender = NULL,
       current_quotes = NULL,
-      correct_type = NULL
+      correct_type = NULL,
+      chosen_weeks = c()
     )
     
     # Render the game UI
@@ -920,22 +921,37 @@ server <- function(input, output, session) {
         mostly_funny <- game_state$funny_count >= 3
         mostly_sassy <- game_state$sassy_count >= 3
         
-        # Calculate predicted week based on quote types chosen
-        show_filter <- if (!is.null(game_state$gender) && game_state$gender == "female") c("The Bachelor", "Both") else c("The Bachelorette", "Both")
-        show_quotes <- quotes %>% filter(Show %in% show_filter)
+        show_filter <- if (!is.null(game_state$gender) && game_state$gender == "female") "The Bachelor" else "The Bachelorette"
+        show_quotes <- quotes %>% filter(Show == show_filter)
+        show_name <- show_filter
         
-        romantic_avg_week <- mean(show_quotes$Week[show_quotes$Classification == "Romantic"], na.rm = TRUE)
-        funny_avg_week <- mean(show_quotes$Week[show_quotes$Classification == "Funny"], na.rm = TRUE)
-        sassy_avg_week <- mean(show_quotes$Week[show_quotes$Classification == "Sassy"], na.rm = TRUE)
-        
-        predicted_week <- round(
-          (game_state$score * romantic_avg_week +
-             game_state$funny_count * funny_avg_week +
-             game_state$sassy_count * sassy_avg_week) / game_state$max_rounds, 1
-        )
-        if (is.na(predicted_week)) predicted_week <- 1
+        # Predicted week = furthest week from all chosen quotes
+        predicted_week <- if (length(game_state$chosen_weeks) > 0 && any(!is.na(game_state$chosen_weeks))) {
+          max(game_state$chosen_weeks, na.rm = TRUE)
+        } else {
+          1
+        }
         week_pct <- round((predicted_week / 11) * 100)
-        show_name <- if (!is.null(game_state$gender) && game_state$gender == "female") "The Bachelor" else "The Bachelorette"
+        
+        # Fun quip: which style lasts longest for their gender?
+        romantic_avg <- mean(show_quotes$Week[show_quotes$Classification == "Romantic"], na.rm = TRUE)
+        funny_avg    <- mean(show_quotes$Week[show_quotes$Classification == "Funny"],    na.rm = TRUE)
+        sassy_avg    <- mean(show_quotes$Week[show_quotes$Classification == "Sassy"],    na.rm = TRUE)
+        
+        avgs <- c(Romantic = romantic_avg, Funny = funny_avg, Sassy = sassy_avg)
+        best_style <- names(which.max(avgs))
+        worst_style <- names(which.min(avgs))
+        
+        gender_label <- if (!is.null(game_state$gender) && game_state$gender == "female") "women" else "men"
+        quip <- tags$p(
+          tags$strong("Fun fact:"), 
+          paste0(" On ", show_name, ", ", best_style, " quotes tend to last the longest for ", gender_label,
+          " (avg week ", round(avgs[best_style], 1), "), while ", worst_style,
+          " ones get sent home the earliest (avg week ", round(avgs[worst_style], 1), "). ",
+          if (game_state$score >= 3) "Looks like you played it right!" 
+          else paste0("Maybe lean more ", tolower(best_style), " next time!")
+        )
+      )
         
         # Determine outcome type
         outcome_type <- if (got_rose) {
@@ -1002,11 +1018,18 @@ server <- function(input, output, session) {
                style = "font-family: 'Lobster', cursive; color: #DC143C; font-size: 32px; margin: 0;")
           ),
           
+          # Quip box
+          tags$div(
+            style = "background-color: #FFF8E1; border: 1px solid #FFD700; border-radius: 10px;
+           padding: 15px 20px; margin: 0 auto 20px auto; max-width: 500px; text-align: left;",
+            tags$div(quip, style = "font-size: 15px; color: #555; margin: 0; line-height: 1.6;")
+          ),
+          
           tags$div(
             style = "display: flex; gap: 15px; justify-content: center;",
             actionButton("game_restart", "Play Again",
                          style = "background-color: #DC143C; color: white; font-family: 'Lobster', cursive;
-                                  font-size: 20px; padding: 12px 30px; border: none; border-radius: 10px;")
+                        font-size: 20px; padding: 12px 30px; border: none; border-radius: 10px;")
           )
         )
       }
@@ -1041,10 +1064,11 @@ server <- function(input, output, session) {
       game_state$round <- 1
       game_state$funny_count <- 0
       game_state$sassy_count <- 0
+      game_state$chosen_weeks <- c()
       
       # Filter quotes by show based on gender
-      show_filter <- if (game_state$gender == "female") c("The Bachelor", "Both") else c("The Bachelorette", "Both")
-      show_quotes <- quotes %>% filter(Show %in% show_filter)
+      show_filter <- if (game_state$gender == "female") "The Bachelor" else "The Bachelorette"
+      show_quotes <- quotes %>% filter(Show == show_filter)
       
       romantic <- show_quotes %>% filter(Classification == "Romantic") %>% sample_n(1)
       funny <- show_quotes %>% filter(Classification == "Funny") %>% sample_n(1)
@@ -1058,6 +1082,10 @@ server <- function(input, output, session) {
       lapply(1:3, function(i) {
         observeEvent(input[[paste0("quote_choice_", i)]], {
           chosen <- game_state$current_quotes[i, ]
+          
+          # Track the week of the chosen quote
+          game_state$chosen_weeks <- c(game_state$chosen_weeks, chosen$Week)  # ← ADD THIS
+          
           if (chosen$Classification == "Romantic") {
             game_state$score <- game_state$score + 1
           } else if (chosen$Classification == "Funny") {
@@ -1069,8 +1097,8 @@ server <- function(input, output, session) {
             game_state$stage <- "result"
           } else {
             game_state$round <- game_state$round + 1
-            show_filter <- if (game_state$gender == "female") c("The Bachelor", "Both") else c("The Bachelorette", "Both")
-            show_quotes <- quotes %>% filter(Show %in% show_filter)
+            show_filter <- if (game_state$gender == "female") "The Bachelor" else "The Bachelorette"  # ← CHANGED (no "Both")
+            show_quotes <- quotes %>% filter(Show == show_filter)
             romantic <- show_quotes %>% filter(Classification == "Romantic") %>% sample_n(1)
             funny <- show_quotes %>% filter(Classification == "Funny") %>% sample_n(1)
             sassy <- show_quotes %>% filter(Classification == "Sassy") %>% sample_n(1)
@@ -1088,6 +1116,7 @@ server <- function(input, output, session) {
       game_state$funny_count <- 0
       game_state$sassy_count <- 0
       game_state$gender <- NULL
+      game_state$chosen_weeks <- c()
     })
     
     # Game home button
