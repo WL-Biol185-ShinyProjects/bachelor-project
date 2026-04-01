@@ -24,16 +24,7 @@ I am a current Sophomore at Washington & Lee University. I enjoy the Bachelor an
  
 ## AI Tools Used
  
-**Claude (Anthropic)** was used throughout the development of this project as a coding assistant. Specific uses included:
- 
-- Writing and debugging R Shiny `server.R` and `ui.R` code
-- Building the interactive leaflet maps with state filtering and custom popups
-- Designing and implementing the contestant survey and casting likelihood calculator
-- Developing the Rose Game logic, including quote classification, scoring, and result generation
-- Creating the Data Analysis tab with ggplot2 visualizations for age, occupation, and success rate
-- Building the Culture Analysis tab, including pie charts, a ggplot2 world map with floating annotation boxes and leader lines, and mean age cards
-- Styling the app with custom CSS including the greyscale map tile filter, Lobster font integration, and the split-screen title layout
-- Writing and formatting this README
+**Claude** was used throughout the development of this project as a coding assistant. We used as a tool to effectively put our ideas and creativity into functional R code and help debug issues when necessary. 
  
 ---
  
