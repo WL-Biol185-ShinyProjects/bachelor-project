@@ -291,9 +291,9 @@ ui <- fluidPage(
                  
                  # State Selection
                  selectizeInput("survey_state",
-                                "What state are you from?",
+                                "Where are you from?",
                                 choices = NULL,
-                                options = list(placeholder = 'Select your state...')),
+                                options = list(placeholder = 'Select your state/country...')),
                  
                  br(),
                  
