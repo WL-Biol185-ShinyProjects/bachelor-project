@@ -480,6 +480,69 @@ ui <- fluidPage(
                )
              )
     ),
+    # BIBLIOGRAPHY TAB
+    tabPanel("Bibliography",
+             tags$div(
+               style = "min-height: calc(100vh - 42px); background: linear-gradient(135deg, #D21A00 0%, #F8DEE7 100%);
+                        padding: 40px 20px; overflow-y: auto;",
+               
+               tags$div(
+                 style = "max-width: 900px; margin: 0 auto;",
+                 
+                 h2("Bibliography",
+                    style = "text-align: center; color: white; font-family: 'Lobster', cursive;
+                             font-size: 52px; margin-bottom: 30px;
+                             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);"),
+                 
+                 tags$div(
+                   style = "background-color: white; border-radius: 15px; padding: 40px 50px;
+                            box-shadow: 0 6px 20px rgba(0,0,0,0.15);",
+                   
+                   # Source 1
+                   tags$p(
+                     HTML("Fivethirtyeight. (n.d.). <em>data/bachelorette/bachelorette.csv at master · fivethirtyeight/data</em>. GitHub. https://github.com/fivethirtyeight/data/blob/master/bachelorette/bachelorette.csv"),
+                     style = "font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 24px;
+                              padding-left: 40px; text-indent: -40px;"
+                   ),
+                   
+                   # Source 2
+                   tags$p(
+                     HTML("Lenhard, A., Minten, M. P., & Lenhard, W. (2023). When biology takes over: TV formats like <em>The Bachelor</em> and <em>The Bachelorette</em> confirm evolutionary theories of partner selection. <em>Frontiers in psychology, 14</em>, 1219915. <a href='https://doi.org/10.3389/fpsyg.2023.1219915' target='_blank' style='color: #DC143C;'>https://doi.org/10.3389/fpsyg.2023.1219915</a>"),
+                     style = "font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 24px;
+                              padding-left: 40px; text-indent: -40px;"
+                   ),
+                   
+                   # Source 3
+                   tags$p(
+                     HTML("<em>The Bachelor & Bachelorette contestants</em>. (2017, March 8). Kaggle. https://www.kaggle.com/datasets/brianbgonz/the-bachelorette-contestants/data"),
+                     style = "font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 24px;
+                              padding-left: 40px; text-indent: -40px;"
+                   ),
+                   
+                   # Source 4
+                   tags$p(
+                     HTML("<em>The Bachelor VS the Bachelorette</em>. (2020, November 14). Kaggle. https://www.kaggle.com/datasets/rachelleperez/the-bachelor-vs-the-bachelorette"),
+                     style = "font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 24px;
+                              padding-left: 40px; text-indent: -40px;"
+                   ),
+                   
+                   # Source 5
+                   tags$p(
+                     HTML("Wikipedia contributors. (2026, March 29). The Bachelor (American TV series). <em>Wikipedia</em>. <a href='https://en.wikipedia.org/wiki/The_Bachelor_%28American_TV_series%29#Seasons' target='_blank' style='color: #DC143C;'>https://en.wikipedia.org/wiki/The_Bachelor_%28American_TV_series%29#Seasons</a>"),
+                     style = "font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 24px;
+                              padding-left: 40px; text-indent: -40px;"
+                   ),
+                   
+                   # Source 6
+                   tags$p(
+                     HTML("Wikipedia contributors. (2026, March 29). The Bachelorette (American TV series). <em>Wikipedia</em>. <a href='https://en.wikipedia.org/wiki/The_Bachelorette_%28American_TV_series%29' target='_blank' style='color: #DC143C;'>https://en.wikipedia.org/wiki/The_Bachelorette_%28American_TV_series%29</a>"),
+                     style = "font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 24px;
+                              padding-left: 40px; text-indent: -40px;"
+                   )
+                 )
+               )
+             )
+    ),
     
     # ABOUT TAB
     tabPanel("About",

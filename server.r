@@ -716,8 +716,6 @@ server <- function(input, output, session) {
         geom_bar(stat = "identity", fill = plot_color, alpha = 0.7) +
         geom_text(aes(label = count), vjust = -0.5, size = 3, color = "#333") +
         labs(
-          title = paste0(analysis_show(), ": Number of Contestants by Age"),
-          subtitle = "Total contestants at each age",
           x = "Age",
           y = "Number of Contestants"
           
@@ -757,8 +755,6 @@ server <- function(input, output, session) {
         geom_text(aes(label = count), hjust = -0.1, size = 3.5, color = "#333") +
         coord_flip() +
         labs(
-          title = paste0(analysis_show(), ": Top 15 Most Common Occupations"),
-          subtitle = "Sorted by number of contestants",
           x = "Occupation",
           y = "Number of Contestants"
           
@@ -817,8 +813,6 @@ server <- function(input, output, session) {
         scale_y_continuous(limits = c(0, 110), breaks = seq(0, 100, 20),
                            labels = function(x) paste0(x, "%")) +
         labs(
-          title = paste0(show_label, " Success Rate"),
-          subtitle = paste0("Based on ", total, " seasons"),
           x = NULL,
           y = "Percentage of Seasons"
         ) +
@@ -1021,8 +1015,6 @@ server <- function(input, output, session) {
                   hjust = -0.2, size = 4, color = "#333") +
         coord_flip() +
         labs(
-          title = paste0(culture_show(), ": Wedding Rate by Region"),
-          subtitle = "Percentage of seasons that ended in marriage",
           x = "Region", y = "Wedding Rate (%)"
         ) +
         theme_minimal() +
